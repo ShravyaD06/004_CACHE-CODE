@@ -74,6 +74,8 @@ def get_copilot_insights(
         return build_explain_conflicting_values(doc, fields)
     elif action in ("explain_corrections", "audit_corrections"):
         return build_explain_corrections(doc, corrections)
+    elif action in ("explain_authenticity", "check_authenticity", "verify_ai_generated"):
+        return build_explain_authenticity(doc, fields, issues)
     else:
         return build_custom_assistant_response(doc, fields, issues, corrections, payload.prompt or payload.action)
 
@@ -329,9 +331,70 @@ def build_explain_corrections(doc: Document, corrections: list[ReviewCorrection]
         suggestions=["Summarize extracted information", "Explain validation errors"]
     )
 
+def build_explain_authenticity(doc: Document, fields: list[ExtractedField], issues: list[ValidationIssue]) -> CopilotResponse:
+    from backend.app.services.authenticity_detector import detect_document_authenticity
+
+    doc_text_parts = [f.extracted_value for f in fields if f.extracted_value]
+    report = detect_document_authenticity(
+        doc.filepath,
+        {"full_text": "\n".join(doc_text_parts)},
+        validated_fields=[{"field_key": f.field_key, "extracted_value": f.extracted_value} for f in fields],
+        validation_issues=[{"issue_type": i.issue_type, "message": i.message} for i in issues]
+    )
+
+    score = report["authenticity_score"]
+    risk = report["risk_level"]
+    verdict = report["verdict"]
+    signals = report.get("signals", [])
+    meta = report.get("metadata_provenance", {})
+    linguistic = report.get("linguistic_metrics", {})
+
+    risk_badge = "🟢 LOW RISK" if risk == "LOW" else ("🟡 MEDIUM RISK" if risk == "MEDIUM" else "🔴 HIGH RISK")
+
+    md = f"""### AI Content & Document Authenticity Report
+
+**Verdict:** {verdict}
+**Risk Level:** `{risk_badge}` | **Authenticity Confidence:** `{score}%`
+
+---
+
+#### 1. Forensic Metadata & Provenance
+* **File Type:** `{doc.actual_file_type or 'PDF'}`
+* **PDF Producer:** `{meta.get('producer', 'N/A')}`
+* **PDF Creator:** `{meta.get('creator', 'N/A')}`
+* **Camera / Hardware EXIF:** `{meta.get('camera_model', 'None (Digital File)')}`
+
+#### 2. Linguistic & Text Burstiness Metrics
+* **Sentence Cadence Burstiness:** `{linguistic.get('burstiness_score', 0)}/100` (Human documents show high variance; LLMs produce flat cadences)
+* **Vocabulary Richness:** `{linguistic.get('vocabulary_richness', 0)}/100`
+* **Suspicious Uniformity:** `{'Yes (Low Variance Detected)' if linguistic.get('is_suspiciously_uniform') else 'No (Natural Distribution)'}`
+
+#### 3. Detected Forensic Signals
+"""
+    if not signals:
+        md += "✅ **No synthetic compiler, AI generator signatures, or mathematical hallucinations detected.** The document exhibits normal digital/scanned characteristics.\n"
+    else:
+        for s in signals:
+            sev_icon = "⚠️" if s["severity"] == "WARNING" else ("🚨" if s["severity"] == "CRITICAL" else "ℹ️")
+            md += f"* {sev_icon} **{s['title']}** ({s['category'].upper()}): {s['description']}\n"
+            if s.get("evidence"):
+                md += f"  * *Evidence:* `{s['evidence']}`\n"
+
+    md += "\n> **Reviewer Guidance:** If flagged HIGH or MEDIUM risk, inspect physical stamp provenance, verify customer registration IDs, or request an official physical hardcopy."
+
+    return CopilotResponse(
+        action="explain_authenticity",
+        title=f"Authenticity Analysis ({score}%)",
+        markdown_content=md,
+        structured_data=report,
+        suggestions=["Summarize extracted information", "Explain validation errors", "Audit human corrections"]
+    )
+
 def build_custom_assistant_response(doc: Document, fields: list[ExtractedField], issues: list[ValidationIssue], corrections: list[ReviewCorrection], prompt: str) -> CopilotResponse:
     p_lower = prompt.lower()
-    if "correct" in p_lower or "audit" in p_lower or "history" in p_lower:
+    if "authent" in p_lower or "ai generate" in p_lower or "synthetic" in p_lower or "fake" in p_lower:
+        return build_explain_authenticity(doc, fields, issues)
+    elif "correct" in p_lower or "audit" in p_lower or "history" in p_lower:
         return build_explain_corrections(doc, corrections)
     elif "classif" in p_lower:
         return build_explain_classification(doc)

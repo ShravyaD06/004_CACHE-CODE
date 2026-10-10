@@ -22,6 +22,7 @@ from backend.app.services.extractor import extract_fields_from_document
 from backend.app.services.gemini_extractor import extract_with_gemini, is_gemini_available, get_gemini_diagnostics, test_gemini_connection
 from backend.app.services.validator import validate_extracted_fields, parse_and_validate_date
 from backend.app.services.export_service import export_document_json, export_document_csv
+from backend.app.services.authenticity_detector import detect_document_authenticity
 
 router = APIRouter(prefix="/api/documents", tags=["Documents"])
 
@@ -101,6 +102,23 @@ def process_document_background(doc_id: str, job_id: str, db_session_factory):
                     "severity": "WARNING",
                     "message": f"Probable duplicate document. Identical file content matches document ID '{existing_dup.id}' ({existing_dup.filename})."
                 })
+
+        # Step 6: AI-Generated Content & Forensic Authenticity Detection
+        authenticity_report = detect_document_authenticity(
+            doc.filepath,
+            ocr_data,
+            validated_fields=validated_fields,
+            validation_issues=issues
+        )
+        if authenticity_report.get("risk_level") in ("HIGH", "MEDIUM") and authenticity_report.get("signals"):
+            primary_sig = authenticity_report["signals"][0]
+            issues.append({
+                "field_id": None,
+                "field_key": None,
+                "issue_type": "AI_GENERATED_SUSPICION" if authenticity_report["risk_level"] == "HIGH" else "AUTHENTICITY_WARNING",
+                "severity": "WARNING",
+                "message": f"Authenticity Forensic Flag: {primary_sig['title']} - {primary_sig['description']}"
+            })
 
         doc.status = overall_doc_status
         db.commit()
@@ -323,6 +341,15 @@ def get_document_results(document_id: str, db: Session = Depends(get_db)):
 
     alternatives = json.loads(doc.alternatives_json) if getattr(doc, "alternatives_json", None) else []
 
+    # Forensic Authenticity Report
+    doc_text_parts = [f.extracted_value for f in fields if f.extracted_value]
+    authenticity_rep = detect_document_authenticity(
+        doc.filepath,
+        {"full_text": "\n".join(doc_text_parts)},
+        validated_fields=[{"field_key": f.field_key, "extracted_value": f.extracted_value} for f in fields],
+        validation_issues=[{"issue_type": i.issue_type, "message": i.message} for i in issues]
+    )
+
     return DocumentResultsResponse(
         document_id=doc.id,
         filename=doc.filename,
@@ -342,7 +369,24 @@ def get_document_results(document_id: str, db: Session = Depends(get_db)):
         status=doc.status,
         created_at=doc.created_at.isoformat(),
         extracted_fields=field_schemas,
-        validation_issues=issue_schemas
+        validation_issues=issue_schemas,
+        authenticity=authenticity_rep
+    )
+
+
+@router.get("/{document_id}/authenticity")
+def get_document_authenticity(document_id: str, db: Session = Depends(get_db)):
+    doc = db.query(Document).filter(Document.id == document_id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found.")
+    fields = db.query(ExtractedField).filter(ExtractedField.document_id == document_id).all()
+    issues = db.query(ValidationIssue).filter(ValidationIssue.document_id == document_id).all()
+    doc_text_parts = [f.extracted_value for f in fields if f.extracted_value]
+    return detect_document_authenticity(
+        doc.filepath,
+        {"full_text": "\n".join(doc_text_parts)},
+        validated_fields=[{"field_key": f.field_key, "extracted_value": f.extracted_value} for f in fields],
+        validation_issues=[{"issue_type": i.issue_type, "message": i.message} for i in issues]
     )
 
 

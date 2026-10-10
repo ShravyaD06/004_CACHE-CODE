@@ -324,6 +324,13 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
                     <span>Check conflicts</span>
                   </button>
                   <button
+                    onClick={() => handleQuickAction('explain_authenticity')}
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 border border-slate-200 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
+                  >
+                    <span>🛡️</span>
+                    <span>Verify AI Authenticity</span>
+                  </button>
+                  <button
                     onClick={() => handleQuickAction('explain_corrections')}
                     className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-teal-50 dark:hover:bg-teal-950/40 border border-slate-200 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >

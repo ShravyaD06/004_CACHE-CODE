@@ -452,6 +452,71 @@ export const SideBySideReviewCanvas: React.FC = () => {
             </div>
           )}
 
+          {/* AI Authenticity & Forensic Inspection Card */}
+          {data.authenticity && (
+            <div className={`p-4 rounded-xl border transition-all ${
+              data.authenticity.risk_level === 'HIGH'
+                ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800'
+                : data.authenticity.risk_level === 'MEDIUM'
+                ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800'
+                : 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800'
+            }`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className={`w-4 h-4 ${
+                    data.authenticity.risk_level === 'HIGH'
+                      ? 'text-rose-600 dark:text-rose-400'
+                      : data.authenticity.risk_level === 'MEDIUM'
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }`} />
+                  <h3 className="text-xs font-bold text-slate-900 dark:text-white">
+                    AI Authenticity & Forensic Analysis
+                  </h3>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold font-mono ${
+                  data.authenticity.risk_level === 'HIGH'
+                    ? 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300'
+                    : data.authenticity.risk_level === 'MEDIUM'
+                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'
+                    : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300'
+                }`}>
+                  {data.authenticity.risk_level} RISK ({data.authenticity.authenticity_score}%)
+                </span>
+              </div>
+
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 font-medium">
+                {data.authenticity.verdict}
+              </p>
+
+              {data.authenticity.signals.length > 0 && (
+                <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-800/80 space-y-1.5">
+                  {data.authenticity.signals.map((sig, sIdx) => (
+                    <div key={`sig-${sIdx}`} className="text-[11px] flex items-start gap-1.5">
+                      <span className="font-bold">•</span>
+                      <div>
+                        <span className="font-semibold text-slate-900 dark:text-white">{sig.title}: </span>
+                        <span className="text-slate-600 dark:text-slate-400">{sig.description}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-wrap items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                <span>Producer: {data.authenticity.metadata_provenance?.producer || 'Not Specified'}</span>
+                <span>•</span>
+                <span>EXIF: {data.authenticity.metadata_provenance?.camera_model || 'Digital'}</span>
+                {data.authenticity.linguistic_metrics && (
+                  <>
+                    <span>•</span>
+                    <span>Burstiness: {data.authenticity.linguistic_metrics.burstiness_score}/100</span>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {data.validation_issues.length > 0 && (
             <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
               <h3 className="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">

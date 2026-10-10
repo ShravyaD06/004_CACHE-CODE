@@ -63,6 +63,7 @@ class DocumentResultsResponse(BaseModel):
     created_at: str
     extracted_fields: List[ExtractedFieldSchema]
     validation_issues: List[ValidationIssueSchema]
+    authenticity: Optional[Dict[str, Any]] = None
 
 class DocumentListItem(BaseModel):
     id: str

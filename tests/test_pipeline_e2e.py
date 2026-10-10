@@ -271,8 +271,30 @@ def run_all_tests():
     print(f"  * Scanned image ingested and processed through OpenCV pipeline successfully!")
     print("  [OK] Test 10 Passed!")
 
+    # ---------------------------------------------------------
+    # TEST 11: AI Authenticity & Forensic Analysis Engine
+    # ---------------------------------------------------------
+    print("\n[TEST 11] Verifying AI Authenticity & Forensic Detection...")
+    auth_res = requests.get(f"{BASE_URL}/api/documents/{inv_doc_id}/authenticity")
+    assert auth_res.status_code == 200, f"Authenticity check failed: {auth_res.text}"
+    auth_data = auth_res.json()
+    assert "authenticity_score" in auth_data
+    assert "risk_level" in auth_data
+    assert "signals" in auth_data
+    print(f"  * Authenticity Score: {auth_data['authenticity_score']}%")
+    print(f"  * Risk Level: {auth_data['risk_level']} ({auth_data['verdict']})")
+    print(f"  * Metadata Checked: Producer='{auth_data['metadata_provenance'].get('producer')}'")
+
+    # Verify Copilot Authenticity query
+    copilot_auth_res = requests.post(f"{BASE_URL}/api/documents/{inv_doc_id}/copilot", json={"action": "explain_authenticity"})
+    assert copilot_auth_res.status_code == 200
+    copilot_auth_data = copilot_auth_res.json()
+    assert "Authenticity" in copilot_auth_data["title"]
+    print(f"  * Copilot Authenticity Response Verified: {copilot_auth_data['title']}")
+    print("  [OK] Test 11 Passed!")
+
     print("\n" + "=" * 70)
-    print("  ALL 10 COMPLETE END-TO-END PIPELINE TESTS COMPLETED SUCCESSFULLY!")
+    print("  ALL 11 COMPLETE END-TO-END PIPELINE TESTS COMPLETED SUCCESSFULLY!")
     print("=" * 70)
 
 if __name__ == "__main__":

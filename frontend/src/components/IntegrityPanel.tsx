@@ -69,6 +69,26 @@ export const IntegrityPanel: React.FC<IntegrityPanelProps> = ({ documents }) => 
               </p>
             </div>
           </div>
+
+          <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
+            <Activity className="w-4 h-4 text-indigo-600 dark:text-teal-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-slate-900 dark:text-white">AI Content & PDF Provenance Detection</p>
+              <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
+                Inspects PDF compiler headers, diffusion tool signatures, and camera EXIF to detect synthetic document fabrication.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
+            <ShieldAlert className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-slate-900 dark:text-white">Linguistic Burstiness & Perplexity Scoring</p>
+              <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
+                Measures sentence length variance and flags unnaturally flat LLM phrasing and synthetic placeholder archetypes.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

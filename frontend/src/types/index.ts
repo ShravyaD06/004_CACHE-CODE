@@ -55,6 +55,33 @@ export interface ClassificationAlternative {
   score: number;
 }
 
+export interface AuthenticitySignal {
+  id: string;
+  category: 'metadata' | 'visual' | 'linguistics' | 'arithmetic';
+  severity: 'CRITICAL' | 'WARNING' | 'INFO';
+  title: string;
+  description: string;
+  evidence?: string;
+}
+
+export interface AuthenticityReport {
+  authenticity_score: number;
+  risk_level: 'LOW' | 'MEDIUM' | 'HIGH';
+  verdict: string;
+  signals: AuthenticitySignal[];
+  metadata_provenance?: {
+    producer?: string;
+    creator?: string;
+    has_exif?: boolean;
+    camera_model?: string;
+  };
+  linguistic_metrics?: {
+    burstiness_score?: number;
+    vocabulary_richness?: number;
+    is_suspiciously_uniform?: boolean;
+  };
+}
+
 export interface DocumentResults {
   document_id: string;
   filename: string;
@@ -75,6 +102,7 @@ export interface DocumentResults {
   created_at: string;
   extracted_fields: ExtractedField[];
   validation_issues: ValidationIssue[];
+  authenticity?: AuthenticityReport;
 }
 
 export interface ProcessingJobStatus {
