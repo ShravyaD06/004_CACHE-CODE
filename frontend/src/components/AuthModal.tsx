@@ -38,21 +38,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl text-slate-100 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-2xl text-slate-850 dark:text-slate-100 space-y-6">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-1">
+          <div className="inline-flex p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-250 dark:border-indigo-800/60 mb-1">
             <Shield className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-white">Sign in to DocuSense AI</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Sign in to DocuSense AI</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
             Enterprise document information extraction, verification, and audit trail platform.
           </p>
         </div>
@@ -60,7 +60,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
         <div className="space-y-3 pt-2">
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white text-slate-900 font-semibold text-sm hover:bg-slate-100 transition-all shadow-md active:scale-[0.99]"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold text-sm transition-all shadow-md active:scale-[0.99]"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -86,7 +86,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
           {!googleClientId && (
             <button
               onClick={handleDemoSignIn}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 font-semibold text-sm transition-all"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-indigo-600 dark:text-indigo-400 font-semibold text-sm transition-all"
             >
               <User className="w-4 h-4" /> Instant Demo Sign-In
             </button>
@@ -94,30 +94,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
         </div>
 
         {showConfigDetails && (
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 text-xs text-slate-300 animate-in fade-in duration-150">
-            <div className="flex items-center gap-2 text-amber-400 font-semibold">
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3 text-xs text-slate-600 dark:text-slate-300 animate-in fade-in duration-150">
+            <div className="flex items-center gap-2 text-amber-500 font-semibold">
               <Key className="w-4 h-4" /> Google OAuth Configuration Required
             </div>
-            <p className="text-slate-400 leading-normal">
+            <p className="text-slate-500 dark:text-slate-400 leading-normal">
               To enable live production Google Sign-In, configure your OAuth credentials in Google Cloud Console:
             </p>
-            <ul className="space-y-1.5 list-disc list-inside text-slate-300 font-mono text-[11px]">
+            <ul className="space-y-1.5 list-disc list-inside text-slate-700 dark:text-slate-300 font-mono text-[11px]">
               <li>
                 Authorized Origin:{' '}
-                <span className="text-emerald-400">http://localhost:5173</span>
+                <span className="text-teal-600 dark:text-teal-400">http://localhost:5173</span>
               </li>
               <li>
                 Redirect URI:{' '}
-                <span className="text-emerald-400">http://localhost:5173/auth/google/callback</span>
+                <span className="text-teal-600 dark:text-teal-400">http://localhost:5173/auth/google/callback</span>
               </li>
               <li>
-                Env Var: <span className="text-teal-300">VITE_GOOGLE_CLIENT_ID</span>
+                Env Var: <span className="text-indigo-600 dark:text-indigo-400">VITE_GOOGLE_CLIENT_ID</span>
               </li>
             </ul>
             <div className="pt-2">
               <button
                 onClick={handleDemoSignIn}
-                className="w-full py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 rounded-lg font-semibold transition-colors"
+                className="w-full py-2 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/40 rounded-lg font-semibold transition-colors"
               >
                 Proceed with Demo Session
               </button>
@@ -125,7 +125,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
           </div>
         )}
 
-        <div className="text-center text-[11px] text-slate-500 border-t border-slate-800/80 pt-4">
+        <div className="text-center text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800/80 pt-4">
           Encrypted OAuth 2.0 Auth • Zero Document Persistence without Consent
         </div>
       </div>

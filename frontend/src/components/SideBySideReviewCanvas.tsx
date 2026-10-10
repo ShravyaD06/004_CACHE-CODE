@@ -148,8 +148,8 @@ export const SideBySideReviewCanvas: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white border border-[#E4E7E1] rounded-2xl p-12 text-center text-[#69716B]">
-        <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-[#246B57]" />
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center text-slate-500 dark:text-slate-400">
+        <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-indigo-600 dark:text-teal-400" />
         <p className="text-sm font-medium">Loading document evidence & extraction results...</p>
       </div>
     );
@@ -157,10 +157,10 @@ export const SideBySideReviewCanvas: React.FC = () => {
 
   if (!data || !documentId) {
     return (
-      <div className="bg-white border border-[#E4E7E1] rounded-2xl p-12 text-center text-[#69716B]">
-        <AlertCircle className="w-8 h-8 mx-auto mb-3 text-[#C5221F]" />
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center text-slate-500 dark:text-slate-400">
+        <AlertCircle className="w-8 h-8 mx-auto mb-3 text-rose-500" />
         <p className="text-sm">Document results not found.</p>
-        <button onClick={() => navigate('/workspace')} className="mt-4 px-4 py-2 bg-[#246B57] text-white rounded-lg text-xs font-bold">
+        <button onClick={() => navigate('/workspace')} className="mt-4 px-4 py-2 bg-indigo-600 dark:bg-teal-600 text-white rounded-xl text-xs font-bold shadow-sm">
           Return to Workspace
         </button>
       </div>
@@ -175,11 +175,11 @@ export const SideBySideReviewCanvas: React.FC = () => {
     const pct = Math.round(score * 100);
     switch (level) {
       case 'HIGH':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E6F4EA] text-[#137333] border border-[#CEEAD6]">HIGH ({pct}%)</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">HIGH ({pct}%)</span>;
       case 'MEDIUM':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF7E0] text-[#B06000] border border-[#FCE8E6]">MEDIUM ({pct}%)</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">MEDIUM ({pct}%)</span>;
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FCE8E6] text-[#C5221F] border border-[#FAD2CF]">LOW ({pct}%)</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">LOW ({pct}%)</span>;
     }
   };
 
@@ -187,34 +187,34 @@ export const SideBySideReviewCanvas: React.FC = () => {
     switch (status) {
       case 'VALID':
       case 'VALIDATED_BY_HUMAN':
-        return <span className="text-[#137333] text-xs font-bold flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Validated</span>;
+        return <span className="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Validated</span>;
       case 'CONFLICT_DETECTED':
-        return <span className="text-[#B06000] text-xs font-bold flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Conflict</span>;
+        return <span className="text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Conflict</span>;
       case 'MISSING':
-        return <span className="text-[#C5221F] text-xs font-bold flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Missing</span>;
+        return <span className="text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Missing</span>;
       case 'EMPTY':
-        return <span className="text-[#69716B] text-xs font-medium flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Not Provided</span>;
+        return <span className="text-slate-400 dark:text-slate-500 text-xs font-medium flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Not Provided</span>;
       default:
-        return <span className="text-[#C5221F] text-xs font-bold flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Format Issue</span>;
+        return <span className="text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Format Issue</span>;
     }
   };
 
   return (
-    <div className="bg-white border border-[#E4E7E1] rounded-2xl p-6 shadow-sm flex flex-col gap-6">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col gap-6 transition-colors">
       {/* Rejection Modal */}
       {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white border border-[#E4E7E1] rounded-2xl p-6 max-w-md w-full shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E4E7E1]">
-              <h3 className="text-base font-bold text-[#C5221F] flex items-center gap-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-xs p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-slate-900 dark:text-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <h3 className="text-base font-bold text-rose-600 dark:text-rose-400 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" /> Document Rejection Reason
               </h3>
-              <button onClick={() => setShowRejectModal(false)} className="text-[#69716B] hover:text-[#202622]">
+              <button onClick={() => setShowRejectModal(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-white">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-[#69716B]">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Please specify a clear rejection reason. This explanation will be persisted in the audit log.
             </p>
 
@@ -223,22 +223,22 @@ export const SideBySideReviewCanvas: React.FC = () => {
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="e.g. Total amount does not match invoice line items, or image quality is too low."
-              className="w-full bg-[#F7F7F4] border border-[#E4E7E1] rounded-xl p-3 text-xs text-[#202622] focus:outline-none focus:border-[#C5221F]"
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-rose-500"
             />
 
-            {rejectError && <p className="text-xs font-semibold text-[#C5221F]">{rejectError}</p>}
+            {rejectError && <p className="text-xs font-semibold text-rose-600 dark:text-rose-400">{rejectError}</p>}
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowRejectModal(false)}
-                className="px-4 py-2 rounded-lg bg-[#F7F7F4] border border-[#E4E7E1] text-xs font-semibold text-[#202622]"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRejectSubmit}
                 disabled={reviewSubmitting}
-                className="px-4 py-2 rounded-lg bg-[#C5221F] text-white hover:bg-[#A61C19] text-xs font-bold"
+                className="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-xs font-bold transition-colors"
               >
                 Confirm Rejection
               </button>
@@ -248,23 +248,23 @@ export const SideBySideReviewCanvas: React.FC = () => {
       )}
 
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-[#E4E7E1] gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/workspace')}
-            className="p-2 rounded-xl bg-[#F7F7F4] border border-[#E4E7E1] text-[#69716B] hover:text-[#202622] transition-all"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
-            <h2 className="text-base font-bold text-[#202622] flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-[#246B57]" /> Evidence Verification & Review Canvas
+            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-teal-400" /> Evidence Verification & Review Canvas
             </h2>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[#69716B] mt-0.5">
-              <span>File: <strong className="text-[#202622]">{data.filename}</strong></span>
-              <span>• Format: <strong className="font-mono text-[#246B57]">{data.actual_file_type}</strong></span>
-              <span>• Quality: <strong className={`font-mono ${(data.image_quality_score || 90) < 65 ? 'text-amber-600 font-bold' : 'text-[#246B57]'}`}>{data.image_quality_score || 90}% ({data.quality_label || 'High Quality'})</strong></span>
-              <span>• Status: <strong className="uppercase text-[#246B57]">{data.status}</strong></span>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <span>File: <strong className="text-slate-900 dark:text-white">{data.filename}</strong></span>
+              <span>• Format: <strong className="font-mono text-indigo-600 dark:text-teal-400">{data.actual_file_type}</strong></span>
+              <span>• Quality: <strong className={`font-mono ${(data.image_quality_score || 90) < 65 ? 'text-amber-600 font-bold' : 'text-emerald-600 dark:text-emerald-400'}`}>{data.image_quality_score || 90}% ({data.quality_label || 'High Quality'})</strong></span>
+              <span>• Status: <strong className="uppercase text-indigo-600 dark:text-teal-400">{data.status}</strong></span>
             </div>
           </div>
         </div>
@@ -273,17 +273,17 @@ export const SideBySideReviewCanvas: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setIsCopilotOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 font-bold text-xs shadow-sm transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-sm transition-all"
           >
             <Bot className="w-3.5 h-3.5" /> AI Copilot
           </button>
 
-          <div className="flex items-center gap-1.5 bg-[#F7F7F4] border border-[#E4E7E1] p-1 rounded-xl">
-            <Tag className="w-3.5 h-3.5 text-[#246B57] ml-2" />
+          <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-xl">
+            <Tag className="w-3.5 h-3.5 text-indigo-600 dark:text-teal-400 ml-2" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-[#202622] focus:outline-none pr-1"
+              className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none pr-1"
             >
               <option value="invoice">Vendor Invoice</option>
               <option value="receipt">Payment / Fee Receipt</option>
@@ -295,7 +295,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
               <button
                 onClick={handleReclassify}
                 disabled={reclassifying}
-                className="px-2 py-1 rounded-lg bg-[#246B57] text-white text-[11px] font-bold hover:bg-[#1B5444]"
+                className="px-2 py-1 rounded-lg bg-indigo-600 dark:bg-teal-600 text-white text-[11px] font-bold hover:bg-indigo-700 dark:hover:bg-teal-500"
               >
                 {reclassifying ? 'Reclassifying...' : 'Re-extract Schema'}
               </button>
@@ -305,7 +305,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
           <a
             href={api.getExportUrl(documentId, 'json')}
             download
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F7F7F4] border border-[#E4E7E1] text-[#69716B] hover:text-[#202622] text-xs font-semibold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-colors"
             title="Download JSON Payload"
           >
             <Download className="w-3.5 h-3.5" /> JSON
@@ -314,7 +314,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
           <a
             href={api.getExportUrl(documentId, 'csv')}
             download
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F7F7F4] border border-[#E4E7E1] text-[#69716B] hover:text-[#202622] text-xs font-semibold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-colors"
             title="Download CSV Table"
           >
             <Download className="w-3.5 h-3.5" /> CSV
@@ -323,7 +323,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
           <button
             onClick={handleApprove}
             disabled={reviewSubmitting}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#246B57] text-white hover:bg-[#1B5444] font-bold text-xs shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-indigo-600 dark:bg-teal-600 text-white hover:bg-indigo-700 dark:hover:bg-teal-500 font-bold text-xs shadow-sm transition-all"
           >
             <CheckCircle className="w-3.5 h-3.5" /> Accept & Approve
           </button>
@@ -331,7 +331,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
           <button
             onClick={() => setShowRejectModal(true)}
             disabled={reviewSubmitting}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#FCE8E6] text-[#C5221F] hover:bg-[#C5221F] hover:text-white font-bold text-xs border border-[#FAD2CF]"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-600 hover:text-white font-bold text-xs border border-rose-200 dark:border-rose-800 transition-all"
           >
             Reject Record
           </button>
@@ -340,12 +340,12 @@ export const SideBySideReviewCanvas: React.FC = () => {
 
       {/* Rejection Reason Banner if Rejected */}
       {data.status === 'REJECTED' && data.rejection_reason && (
-        <div className="p-3.5 rounded-xl bg-[#FCE8E6] border border-[#FAD2CF] flex items-start gap-2.5 text-xs text-[#C5221F]">
+        <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-start gap-2.5 text-xs text-rose-700 dark:text-rose-300">
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
             <span className="font-bold">Document Rejected Reason:</span> {data.rejection_reason}
             {data.reviewed_at && (
-              <span className="text-[10px] text-[#C5221F]/80 block mt-0.5">
+              <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 block mt-0.5">
                 Reviewed by {data.reviewed_by} on {new Date(data.reviewed_at).toLocaleString()}
               </span>
             )}
@@ -356,17 +356,17 @@ export const SideBySideReviewCanvas: React.FC = () => {
       {/* Main Side-by-Side View */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[550px]">
         {/* Left 7 Columns: Source Document & SVG Highlight Canvas */}
-        <div className="lg:col-span-7 bg-[#F7F7F4] border border-[#E4E7E1] rounded-xl p-3 flex flex-col relative overflow-hidden">
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E4E7E1] text-xs text-[#69716B]">
-            <span className="font-semibold text-[#202622]">Original Document Preview</span>
+        <div className="lg:col-span-7 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex flex-col relative overflow-hidden transition-colors">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+            <span className="font-semibold text-slate-900 dark:text-white">Original Document Preview</span>
             {selectedField && (
-              <span className="text-[#246B57] text-[11px] font-mono flex items-center gap-1">
+              <span className="text-indigo-600 dark:text-teal-400 text-[11px] font-mono flex items-center gap-1 font-semibold">
                 <CornerDownRight className="w-3 h-3" /> Highlighting: {selectedField.field_label}
               </span>
             )}
           </div>
 
-          <div className="relative flex-1 bg-white rounded-lg overflow-hidden border border-[#E4E7E1]">
+          <div className="relative flex-1 bg-white dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800">
             <iframe
               src={documentUrl}
               className="w-full h-full min-h-[500px] border-0"
@@ -377,10 +377,10 @@ export const SideBySideReviewCanvas: React.FC = () => {
               <div
                 className={`absolute border-2 rounded shadow-md pointer-events-none transition-all duration-300 z-20 ${
                   selectedField.validation_status === 'CONFLICT_DETECTED'
-                    ? 'border-amber-500 bg-amber-500/20'
+                    ? 'border-amber-500 bg-amber-500/25 ring-2 ring-amber-400/40'
                     : selectedField.validation_status === 'INVALID_FORMAT'
-                    ? 'border-rose-500 bg-rose-500/20'
-                    : 'border-[#246B57] bg-[#246B57]/20 animate-pulse'
+                    ? 'border-rose-500 bg-rose-500/25 ring-2 ring-rose-400/40'
+                    : 'border-indigo-600 dark:border-teal-400 bg-indigo-500/20 dark:bg-teal-500/20 ring-2 ring-indigo-400/30 dark:ring-teal-400/30 animate-pulse'
                 }`}
                 style={{
                   top: `${selectedField.bbox[0]}%`,
@@ -391,7 +391,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
               />
             )}
 
-            {/* Render Multi-Candidate Conflict Bounding Boxes (Section C Screen 6 & Section G) */}
+            {/* Render Multi-Candidate Conflict Bounding Boxes */}
             {selectedField?.validation_status === 'CONFLICT_DETECTED' && selectedField.evidence?.candidates && (
               selectedField.evidence.candidates.map((cand, idx) => (
                 cand.bbox && cand.bbox.length === 4 && (
@@ -419,25 +419,25 @@ export const SideBySideReviewCanvas: React.FC = () => {
           </div>
 
           {selectedField && (
-            <div className="mt-2 text-[11px] text-[#69716B] flex items-center justify-between bg-white p-2 rounded-lg border border-[#E4E7E1]">
+            <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-[#202622]">Page {selectedField.page_number} Source</span>
+                <span className="font-semibold text-slate-900 dark:text-white">Page {selectedField.page_number} Source</span>
                 {selectedField.evidence?.extraction_method === 'gemini' ? (
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#E8F0FE] text-[#1A73E8] border border-[#D2E3FC]">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
                     Gemini Flash
                   </span>
                 ) : (
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#F1F3F4] text-[#5F6368] border border-[#DADCE0]">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     Rule Engine
                   </span>
                 )}
               </div>
               {selectedField.raw_text ? (
-                <span className="font-mono text-[#202622] truncate max-w-xs">
+                <span className="font-mono text-slate-800 dark:text-slate-200 truncate max-w-xs font-semibold">
                   Match: &quot;{selectedField.raw_text}&quot;
                 </span>
               ) : (
-                <span className="italic text-[#B06000]">No bounding box coordinates for this field</span>
+                <span className="italic text-amber-600 dark:text-amber-400">No bounding box coordinates for this field</span>
               )}
             </div>
           )}
@@ -446,18 +446,18 @@ export const SideBySideReviewCanvas: React.FC = () => {
         {/* Right 5 Columns: Extracted Fields & Conflict Resolution Form */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {data.classification_reason && (
-            <div className="bg-[#F7F7F4] border border-[#E4E7E1] rounded-xl p-3 text-xs space-y-1">
-              <span className="font-bold text-[#202622]">Classification Evidence:</span>
-              <p className="text-[#69716B] text-[11px] leading-relaxed">{data.classification_reason}</p>
+            <div className="bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs space-y-1">
+              <span className="font-bold text-slate-900 dark:text-white">Classification Evidence:</span>
+              <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">{data.classification_reason}</p>
             </div>
           )}
 
           {data.validation_issues.length > 0 && (
-            <div className="bg-[#FEF7E0] border border-[#FCE8E6] rounded-xl p-4">
-              <h3 className="text-xs font-bold text-[#B06000] flex items-center gap-2 mb-2">
+            <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+              <h3 className="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
                 <AlertTriangle className="w-4 h-4" /> Validation Alerts ({data.validation_issues.length})
               </h3>
-              <ul className="space-y-1.5 text-xs text-[#B06000]">
+              <ul className="space-y-1.5 text-xs text-amber-800 dark:text-amber-300">
                 {data.validation_issues.map((issue) => (
                   <li key={issue.id} className="flex items-start gap-1.5">
                     <span className="font-bold">•</span>
@@ -468,35 +468,35 @@ export const SideBySideReviewCanvas: React.FC = () => {
             </div>
           )}
 
-          <div className="bg-[#F7F7F4] border border-[#E4E7E1] rounded-xl p-4 flex-1 flex flex-col">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 mb-3 border-b border-[#E4E7E1] gap-2">
-              <h3 className="text-xs font-bold text-[#202622] uppercase tracking-wider">
+          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex-1 flex flex-col">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                 Schema Extracted Fields ({data.doc_type_label})
               </h3>
               
               {/* Filter Chips */}
-              <div className="flex items-center gap-1 bg-[#E4E7E1]/60 p-1 rounded-lg text-[11px] font-semibold">
+              <div className="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800/80 p-1 rounded-lg text-[11px] font-semibold">
                 <button
                   onClick={() => setFilterTab('ALL')}
-                  className={`px-2 py-0.5 rounded ${filterTab === 'ALL' ? 'bg-[#246B57] text-white shadow-xs' : 'text-[#69716B] hover:text-[#202622]'}`}
+                  className={`px-2 py-0.5 rounded transition-all ${filterTab === 'ALL' ? 'bg-indigo-600 dark:bg-teal-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                 >
                   All ({data.extracted_fields.length})
                 </button>
                 <button
                   onClick={() => setFilterTab('VALID')}
-                  className={`px-2 py-0.5 rounded ${filterTab === 'VALID' ? 'bg-[#246B57] text-white shadow-xs' : 'text-[#69716B] hover:text-[#202622]'}`}
+                  className={`px-2 py-0.5 rounded transition-all ${filterTab === 'VALID' ? 'bg-indigo-600 dark:bg-teal-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                 >
                   Valid ({data.extracted_fields.filter(f => f.validation_status === 'VALID' || f.validation_status === 'VALIDATED_BY_HUMAN').length})
                 </button>
                 <button
                   onClick={() => setFilterTab('MISSING')}
-                  className={`px-2 py-0.5 rounded ${filterTab === 'MISSING' ? 'bg-[#246B57] text-white shadow-xs' : 'text-[#69716B] hover:text-[#202622]'}`}
+                  className={`px-2 py-0.5 rounded transition-all ${filterTab === 'MISSING' ? 'bg-indigo-600 dark:bg-teal-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                 >
                   Missing ({data.extracted_fields.filter(f => f.validation_status === 'MISSING').length})
                 </button>
                 <button
                   onClick={() => setFilterTab('CONFLICT')}
-                  className={`px-2 py-0.5 rounded ${filterTab === 'CONFLICT' ? 'bg-[#246B57] text-white shadow-xs' : 'text-[#69716B] hover:text-[#202622]'}`}
+                  className={`px-2 py-0.5 rounded transition-all ${filterTab === 'CONFLICT' ? 'bg-indigo-600 dark:bg-teal-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                 >
                   Conflicts ({data.extracted_fields.filter(f => f.validation_status === 'CONFLICT_DETECTED').length})
                 </button>
@@ -521,12 +521,12 @@ export const SideBySideReviewCanvas: React.FC = () => {
                     onClick={() => setSelectedFieldId(field.id)}
                     className={`p-3 rounded-xl border transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white border-[#246B57] shadow-sm ring-1 ring-[#246B57]/30'
-                        : 'bg-white border-[#E4E7E1] hover:border-[#69716B]'
+                        ? 'bg-white dark:bg-slate-900 border-indigo-500 dark:border-teal-400 shadow-sm ring-1 ring-indigo-500/30 dark:ring-teal-400/30'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-xs font-bold text-[#202622]">{field.field_label}</span>
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">{field.field_label}</span>
                       <div className="flex items-center gap-2">
                         {getConfidencePill(field.confidence_level, field.confidence_score)}
                         {getStatusBadge(field.validation_status)}
@@ -539,20 +539,20 @@ export const SideBySideReviewCanvas: React.FC = () => {
                           type="text"
                           value={editValue}
                           onChange={(e) => setEditValue(e.target.value)}
-                          className="flex-1 bg-white border border-[#246B57] text-[#202622] text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
+                          className="flex-1 bg-white dark:bg-slate-800 border border-indigo-500 dark:border-teal-400 text-slate-900 dark:text-white text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
                         />
                         <button
                           onClick={() => handleFieldSave(field.id)}
                           disabled={savingField}
-                          className="p-1.5 rounded-lg bg-[#246B57] text-white hover:bg-[#1B5444] text-xs font-semibold"
+                          className="p-1.5 rounded-lg bg-indigo-600 dark:bg-teal-600 text-white hover:bg-indigo-700 dark:hover:bg-teal-500 text-xs font-semibold shadow-xs"
                         >
                           <Save className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between gap-2 mt-1">
-                        <p className="text-xs font-mono font-medium text-[#202622] break-all">
-                          {field.extracted_value || <span className="text-[#69716B] italic">Not found / Empty</span>}
+                        <p className="text-xs font-mono font-medium text-slate-900 dark:text-white break-all">
+                          {field.extracted_value || <span className="text-slate-400 dark:text-slate-500 italic">Not found / Empty</span>}
                         </p>
                         <button
                           onClick={(e) => {
@@ -560,7 +560,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
                             setEditingFieldId(field.id);
                             setEditValue(field.extracted_value || '');
                           }}
-                          className="text-[#69716B] hover:text-[#246B57] transition-colors p-1"
+                          className="text-slate-400 hover:text-indigo-600 dark:hover:text-teal-400 transition-colors p-1"
                           title="Edit Field Value"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
@@ -569,14 +569,14 @@ export const SideBySideReviewCanvas: React.FC = () => {
                     )}
 
                     {field.is_human_corrected && (
-                      <div className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-[#137333] bg-[#E6F4EA] px-2 py-0.5 rounded border border-[#CEEAD6]">
-                        <CheckCircle className="w-3 h-3 text-[#137333]" /> Edited & Validated by Reviewer
+                      <div className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                        <CheckCircle className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Edited & Validated by Reviewer
                       </div>
                     )}
 
                     {field.validation_status === 'CONFLICT_DETECTED' && field.evidence?.candidates && (
-                      <div className="mt-3 p-2.5 rounded-lg bg-[#FEF7E0] border border-[#FCE8E6] text-[11px]">
-                        <p className="font-bold text-[#B06000] mb-1">⚠️ Select Ground-Truth Candidate (Hover to Highlight):</p>
+                      <div className="mt-3 p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-[11px]">
+                        <p className="font-bold text-amber-800 dark:text-amber-300 mb-1">⚠️ Select Ground-Truth Candidate (Hover to Highlight):</p>
                         <div className="space-y-1">
                           {field.evidence.candidates.map((cand, idx) => (
                             <button
@@ -588,14 +588,14 @@ export const SideBySideReviewCanvas: React.FC = () => {
                                 setEditValue(cand.value);
                                 handleFieldSave(field.id);
                               }}
-                              className={`w-full text-left p-1.5 rounded border text-[#202622] flex items-center justify-between transition-all ${
+                              className={`w-full text-left p-1.5 rounded border text-slate-900 dark:text-white flex items-center justify-between transition-all ${
                                 activeCandidateIndex === idx
-                                  ? 'bg-indigo-50 border-indigo-400 ring-1 ring-indigo-300'
-                                  : 'bg-white border-[#E4E7E1] hover:border-[#246B57]'
+                                  ? 'bg-indigo-50 dark:bg-indigo-950/50 border-indigo-400 ring-1 ring-indigo-300'
+                                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-teal-400'
                               }`}
                             >
-                              <span>Candidate {idx + 1}: <strong className="text-[#246B57]">{cand.value}</strong></span>
-                              <span className="text-[10px] text-[#69716B]">Page {cand.page}</span>
+                              <span>Candidate {idx + 1}: <strong className="text-indigo-600 dark:text-teal-400 font-semibold">{cand.value}</strong></span>
+                              <span className="text-[10px] text-slate-500 dark:text-slate-400">Page {cand.page}</span>
                             </button>
                           ))}
                         </div>

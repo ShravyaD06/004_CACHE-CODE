@@ -165,28 +165,28 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
   };
 
   return (
-    <div className="bg-white border border-[#E4E7E1] rounded-2xl p-6 shadow-sm relative">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm relative transition-colors">
       {/* Screen 3: Live Batch Processing Status Modal / Stepper */}
       {showProgressModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl p-6 text-slate-100 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl p-6 text-slate-900 dark:text-slate-100 space-y-5 transition-colors">
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
+                <div className="p-2 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
                   <Sparkles className="w-5 h-5 animate-pulse" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     Live Batch Processing Pipeline
                     {uploading && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/30 animate-pulse">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 animate-pulse">
                         RUNNING
                       </span>
                     )}
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    File {currentFileIndex} of {totalFiles}: <span className="font-mono text-slate-200">{currentFileName}</span>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    File {currentFileIndex} of {totalFiles}: <span className="font-mono text-slate-800 dark:text-slate-200 font-semibold">{currentFileName}</span>
                   </p>
                 </div>
               </div>
@@ -194,7 +194,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
               {!uploading && (
                 <button
                   onClick={() => setShowProgressModal(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -204,18 +204,18 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
             {/* Overall Progress Percentage Bar */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-mono">
-                <span className="text-slate-400">Pipeline Execution Progress</span>
-                <span className="text-teal-400 font-bold">{progressPercent}%</span>
+                <span className="text-slate-500 dark:text-slate-400">Pipeline Execution Progress</span>
+                <span className="text-teal-600 dark:text-teal-400 font-bold">{progressPercent}%</span>
               </div>
-              <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
+              <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700">
                 <div
-                  className="bg-gradient-to-r from-teal-500 to-emerald-400 h-full transition-all duration-300 rounded-full"
+                  className="bg-gradient-to-r from-indigo-500 via-teal-500 to-emerald-400 h-full transition-all duration-300 rounded-full"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
             </div>
 
-            {/* 4 Pipeline Stages Stepper (Section C Screen 3) */}
+            {/* 4 Pipeline Stages Stepper */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {stages.map((stage) => {
                 const isRunning = stage.status === 'RUNNING';
@@ -226,28 +226,28 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
                     key={stage.id}
                     className={`p-3 rounded-xl border transition-all ${
                       isRunning
-                        ? 'bg-teal-950/40 border-teal-500/50 shadow-md ring-1 ring-teal-500/30'
+                        ? 'bg-teal-50 dark:bg-teal-950/40 border-teal-500/50 shadow-sm ring-1 ring-teal-500/30'
                         : isCompleted
-                        ? 'bg-slate-900/90 border-slate-800'
-                        : 'bg-slate-950/60 border-slate-900 opacity-60'
+                        ? 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700'
+                        : 'bg-slate-50/50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800 opacity-60'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">
+                      <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase">
                         Stage {stage.id} of 4
                       </span>
                       {isCompleted ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       ) : isRunning ? (
-                        <RefreshCw className="w-4 h-4 text-teal-400 animate-spin" />
+                        <RefreshCw className="w-4 h-4 text-teal-600 dark:text-teal-400 animate-spin" />
                       ) : (
-                        <span className="w-2 h-2 rounded-full bg-slate-700" />
+                        <span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700" />
                       )}
                     </div>
-                    <h4 className={`text-xs font-bold mt-1 ${isRunning ? 'text-teal-300' : isCompleted ? 'text-white' : 'text-slate-400'}`}>
+                    <h4 className={`text-xs font-bold mt-1 ${isRunning ? 'text-teal-700 dark:text-teal-300' : isCompleted ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
                       {stage.name}
                     </h4>
-                    <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
                       {stage.detail}
                     </p>
                   </div>
@@ -256,7 +256,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
             </div>
 
             {/* Live Log Terminal Output */}
-            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 font-mono text-xs">
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs shadow-inner">
               <div className="flex items-center gap-2 pb-2 mb-2 border-b border-slate-800 text-slate-400 text-[11px]">
                 <Terminal className="w-3.5 h-3.5 text-teal-400" />
                 <span>Real-Time Execution Logs</span>
@@ -272,13 +272,13 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
 
             {/* Modal Actions */}
             <div className="flex items-center justify-between pt-2">
-              <span className="text-xs text-slate-500 font-mono">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                 {uploading ? 'Processing in asynchronous worker...' : 'Batch ingestion complete.'}
               </span>
               {!uploading && (
                 <button
                   onClick={() => setShowProgressModal(false)}
-                  className="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-md transition-all"
+                  className="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-md transition-all active:scale-[0.98]"
                 >
                   View Ingestion Results
                 </button>
@@ -289,22 +289,22 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
       )}
 
       {/* Main Upload Zone */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-[#E4E7E1] gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-3">
         <div>
-          <h2 className="text-base font-bold text-[#202622] flex items-center gap-2">
-            <Upload className="w-4 h-4 text-[#246B57]" /> Document Ingestion & Batch Upload
+          <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Upload className="w-4 h-4 text-indigo-600 dark:text-teal-400" /> Document Ingestion & Batch Upload
           </h2>
-          <p className="text-xs text-[#69716B] mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Upload PDF, PNG, JPG, or TIFF documents for automated classification & extraction
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="text-xs font-semibold text-[#69716B]">Category Target:</label>
+          <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Category Target:</label>
           <select
             value={overrideType}
             onChange={(e) => setOverrideType(e.target.value)}
-            className="bg-[#F7F7F4] border border-[#E4E7E1] text-[#202622] text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#246B57]"
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-indigo-500 dark:focus:border-teal-400"
           >
             <option value="">Auto-Detect Category (AI Classifier)</option>
             <option value="invoice">Vendor Invoice</option>
@@ -323,8 +323,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
         onDrop={handleDrop}
         className={`mt-4 border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
           dragActive
-            ? 'border-[#246B57] bg-[#246B57]/5 scale-[1.005]'
-            : 'border-[#E4E7E1] bg-[#F7F7F4]/60 hover:border-[#69716B]'
+            ? 'border-indigo-500 dark:border-teal-400 bg-indigo-50/50 dark:bg-teal-500/10 scale-[1.005]'
+            : 'border-slate-300 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 hover:border-indigo-400 dark:hover:border-teal-400'
         }`}
       >
         <input
@@ -337,14 +337,14 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
         />
 
         <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-[#246B57]/10 border border-[#246B57]/20 flex items-center justify-center text-[#246B57]">
+          <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-teal-500/10 border border-indigo-200 dark:border-teal-500/20 flex items-center justify-center text-indigo-600 dark:text-teal-400 shadow-sm">
             <FileText className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-[#202622]">
-              Drag & drop document files here, or <span className="text-[#246B57] underline">browse computer</span>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">
+              Drag & drop document files here, or <span className="text-indigo-600 dark:text-teal-400 underline font-medium">browse computer</span>
             </p>
-            <p className="text-xs text-[#69716B] mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Supports single or multi-file batch uploads: PDF, PNG, JPG, TIFF (Max 20MB per file)
             </p>
           </div>
@@ -352,7 +352,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
       </div>
 
       {errorMsg && (
-        <div className="mt-4 p-3 bg-[#FCE8E6] border border-[#FAD2CF] rounded-xl flex items-center gap-3 text-[#C5221F] text-xs font-medium">
+        <div className="mt-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl flex items-center gap-3 text-rose-700 dark:text-rose-300 text-xs font-medium">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{errorMsg}</span>
         </div>

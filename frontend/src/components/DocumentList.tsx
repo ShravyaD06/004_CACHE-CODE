@@ -117,14 +117,14 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
     switch (status) {
       case 'APPROVED':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#E6F4EA] text-[#137333] border border-[#CEEAD6]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
             <CheckCircle className="w-3.5 h-3.5" /> Approved
           </span>
         );
       case 'REJECTED':
         return (
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FCE8E6] text-[#C5221F] border border-[#FAD2CF] cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 cursor-pointer"
             title={rejection_reason ? `Rejection reason: ${rejection_reason}` : 'Rejected during reviewer inspection'}
           >
             <XCircle className="w-3.5 h-3.5" /> Rejected
@@ -132,32 +132,32 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
         );
       case 'NEEDS_CLASSIFICATION_REVIEW':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FEF7E0] text-[#B06000] border border-[#FCE8E6]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
             <HelpCircle className="w-3.5 h-3.5" /> Needs Category Review
           </span>
         );
       case 'NEEDS_REVIEW':
       case 'REQUIRES_REVIEW':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FEF7E0] text-[#B06000] border border-[#FCE8E6]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
             <AlertTriangle className="w-3.5 h-3.5" /> Needs Review
           </span>
         );
       case 'READY_FOR_REVIEW':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#E6F4EA] text-[#137333] border border-[#CEEAD6]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
             <CheckCircle className="w-3.5 h-3.5" /> Ready for Review
           </span>
         );
       case 'FAILED':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FCE8E6] text-[#C5221F] border border-[#FAD2CF]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
             <XCircle className="w-3.5 h-3.5" /> Failed
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#F7F7F4] text-[#246B57] border border-[#246B57]/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-teal-400 border border-indigo-200 dark:border-teal-500/30">
             <Clock className="w-3.5 h-3.5 animate-spin" /> {status.replace('_', ' ')}
           </span>
         );
@@ -169,8 +169,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
     const isImg = ['PNG', 'JPG', 'JPEG', 'TIFF', 'GIF'].includes(fileType);
 
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F7F7F4] text-[#69716B] border border-[#E4E7E1]">
-        {isImg ? <Image className="w-3 h-3 text-[#246B57]" /> : <FileCode className="w-3 h-3 text-[#246B57]" />}
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        {isImg ? <Image className="w-3 h-3 text-teal-600 dark:text-teal-400" /> : <FileCode className="w-3 h-3 text-indigo-600 dark:text-teal-400" />}
         {fileType}
       </span>
     );
@@ -184,8 +184,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
       <span
         className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold border ${
           isUnknown
-            ? 'bg-[#FEF7E0] text-[#B06000] border-[#FCE8E6]'
-            : 'bg-[#246B57]/10 text-[#246B57] border-[#246B57]/20'
+            ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+            : 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800'
         }`}
       >
         {doc_type_label || (isUnknown ? 'Unknown Document' : doc_type.toUpperCase())}
@@ -194,28 +194,28 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
   };
 
   return (
-    <div className="bg-white border border-[#E4E7E1] rounded-2xl p-6 shadow-sm">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-colors">
       {/* Screen 8: Results History & Export Center Modal */}
       {exportDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="bg-white border border-[#E4E7E1] rounded-2xl max-w-2xl w-full shadow-2xl p-6 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E4E7E1]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl p-6 space-y-4 text-slate-900 dark:text-slate-100 transition-colors">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-[#246B57]/10 text-[#246B57]">
+                <div className="p-2 rounded-xl bg-indigo-50 dark:bg-teal-500/10 text-indigo-600 dark:text-teal-400 border border-indigo-200 dark:border-teal-500/20">
                   <Download className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[#202622]">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
                     Export Center & Webhook Integration
                   </h3>
-                  <p className="text-xs text-[#69716B]">
-                    File: <strong className="text-[#202622]">{exportDoc.filename}</strong> ({exportDoc.doc_type.toUpperCase()})
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    File: <strong className="text-slate-900 dark:text-slate-100 font-semibold">{exportDoc.filename}</strong> ({exportDoc.doc_type.toUpperCase()})
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setExportDoc(null)}
-                className="p-1 rounded-lg text-[#69716B] hover:text-[#202622] hover:bg-[#F7F7F4]"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -227,8 +227,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                 onClick={() => switchExportFormat('json')}
                 className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all border ${
                   exportFormat === 'json'
-                    ? 'bg-[#246B57] text-white border-[#246B57] shadow-xs'
-                    : 'bg-[#F7F7F4] text-[#69716B] border-[#E4E7E1] hover:text-[#202622]'
+                    ? 'bg-indigo-600 dark:bg-teal-600 text-white border-transparent shadow-xs'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Structured JSON (Pydantic)
@@ -237,8 +237,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                 onClick={() => switchExportFormat('csv')}
                 className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all border ${
                   exportFormat === 'csv'
-                    ? 'bg-[#246B57] text-white border-[#246B57] shadow-xs'
-                    : 'bg-[#F7F7F4] text-[#69716B] border-[#E4E7E1] hover:text-[#202622]'
+                    ? 'bg-indigo-600 dark:bg-teal-600 text-white border-transparent shadow-xs'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 Flat Matrix CSV
@@ -247,8 +247,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                 onClick={() => switchExportFormat('webhook')}
                 className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all border ${
                   exportFormat === 'webhook'
-                    ? 'bg-[#246B57] text-white border-[#246B57] shadow-xs'
-                    : 'bg-[#F7F7F4] text-[#69716B] border-[#E4E7E1] hover:text-[#202622]'
+                    ? 'bg-indigo-600 dark:bg-teal-600 text-white border-transparent shadow-xs'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 API Push / Webhook
@@ -258,33 +258,33 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
             {/* Preview or Webhook Configuration */}
             {exportFormat !== 'webhook' ? (
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-[#69716B]">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>Payload Preview ({exportFormat.toUpperCase()})</span>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(previewContent);
                       addToast({ type: 'success', title: 'Copied', message: 'Payload copied to clipboard.' });
                     }}
-                    className="flex items-center gap-1 font-semibold text-[#246B57] hover:underline"
+                    className="flex items-center gap-1 font-semibold text-indigo-600 dark:text-teal-400 hover:underline"
                   >
                     <Copy className="w-3.5 h-3.5" /> Copy
                   </button>
                 </div>
-                <pre className="p-3 bg-[#F7F7F4] border border-[#E4E7E1] rounded-xl text-xs font-mono text-[#202622] max-h-56 overflow-y-auto overflow-x-auto">
+                <pre className="p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-mono text-slate-800 dark:text-slate-200 max-h-56 overflow-y-auto overflow-x-auto shadow-inner">
                   {loadingPreview ? 'Generating export payload...' : previewContent}
                 </pre>
               </div>
             ) : (
-              <div className="space-y-3 p-4 bg-[#F7F7F4] border border-[#E4E7E1] rounded-xl text-xs">
-                <h4 className="font-bold text-[#202622] flex items-center gap-1.5">
-                  <Share2 className="w-4 h-4 text-[#246B57]" /> Direct Enterprise System Push
+              <div className="space-y-3 p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-xs">
+                <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <Share2 className="w-4 h-4 text-indigo-600 dark:text-teal-400" /> Direct Enterprise System Push
                 </h4>
                 <div>
-                  <label className="font-semibold text-[#69716B] block mb-1">Target ERP System:</label>
+                  <label className="font-semibold text-slate-600 dark:text-slate-300 block mb-1">Target ERP System:</label>
                   <select
                     value={destinationSystem}
                     onChange={(e) => setDestinationSystem(e.target.value)}
-                    className="w-full bg-white border border-[#E4E7E1] rounded-lg p-2 text-[#202622]"
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-teal-400"
                   >
                     <option value="SAP S/4HANA ERP">SAP S/4HANA (Accounts Payable)</option>
                     <option value="Workday HR & Finance">Workday (HR & Finance Ingestion)</option>
@@ -294,19 +294,19 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-[#69716B] block mb-1">Webhook Target URL:</label>
+                  <label className="font-semibold text-slate-600 dark:text-slate-300 block mb-1">Webhook Target URL:</label>
                   <input
                     type="text"
                     value={webhookUrl}
                     onChange={(e) => setWebhookUrl(e.target.value)}
-                    className="w-full bg-white border border-[#E4E7E1] rounded-lg p-2 text-[#202622] font-mono text-xs"
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-white font-mono text-xs focus:outline-none focus:border-indigo-500 dark:focus:border-teal-400"
                   />
                 </div>
 
                 {webhookResult && (
-                  <div className="p-3 rounded-lg bg-[#E6F4EA] border border-[#CEEAD6] text-[#137333] space-y-1">
+                  <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 space-y-1">
                     <p className="font-bold flex items-center gap-1">
-                      <CheckCircle className="w-3.5 h-3.5" /> Webhook Delivered Successfully (Status: 200 OK)
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Webhook Delivered Successfully (Status: 200 OK)
                     </p>
                     <p className="text-[11px] font-mono">
                       Timestamp: {webhookResult.delivered_at} | Delivered {webhookResult.payload_bytes} bytes
@@ -317,10 +317,10 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
             )}
 
             {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E4E7E1]">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
               <button
                 onClick={() => setExportDoc(null)}
-                className="px-4 py-2 rounded-xl bg-[#F7F7F4] border border-[#E4E7E1] text-xs font-semibold text-[#69716B]"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               >
                 Close
               </button>
@@ -329,7 +329,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                 <button
                   onClick={handlePushWebhook}
                   disabled={pushingWebhook}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#246B57] text-white hover:bg-[#1B5444] text-xs font-bold shadow-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 dark:bg-teal-600 text-white hover:bg-indigo-700 dark:hover:bg-teal-500 text-xs font-bold shadow-sm transition-all"
                 >
                   <Send className="w-3.5 h-3.5" /> {pushingWebhook ? 'Delivering...' : 'Trigger Webhook Push'}
                 </button>
@@ -337,7 +337,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                 <a
                   href={api.getExportUrl(exportDoc.id, exportFormat)}
                   download
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#246B57] text-white hover:bg-[#1B5444] text-xs font-bold shadow-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 dark:bg-teal-600 text-white hover:bg-indigo-700 dark:hover:bg-teal-500 text-xs font-bold shadow-sm transition-all"
                 >
                   <Download className="w-3.5 h-3.5" /> Download {exportFormat.toUpperCase()} File
                 </a>
@@ -348,12 +348,12 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
       )}
 
       {/* Main Filter & Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-[#E4E7E1] gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-4">
         <div>
-          <h2 className="text-base font-bold text-[#202622] flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#246B57]" /> Ingested Documents Archive
+          <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <FileText className="w-4 h-4 text-indigo-600 dark:text-teal-400" /> Ingested Documents Archive
           </h2>
-          <p className="text-xs text-[#69716B] mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Showing {filteredDocs.length} of {documents.length} ingested documents
           </p>
         </div>
@@ -361,23 +361,23 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
         <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           {/* Search Box */}
           <div className="relative flex-1 sm:w-56">
-            <Search className="w-3.5 h-3.5 text-[#69716B] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search filename or category..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#F7F7F4] border border-[#E4E7E1] text-[#202622] text-xs rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-[#246B57]"
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-indigo-500 dark:focus:border-teal-400 placeholder-slate-400"
             />
           </div>
 
           {/* Date Filter */}
-          <div className="flex items-center gap-1 bg-[#F7F7F4] border border-[#E4E7E1] p-1 rounded-xl text-xs font-semibold">
-            <Calendar className="w-3.5 h-3.5 text-[#69716B] ml-1.5" />
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-xl text-xs font-semibold">
+            <Calendar className="w-3.5 h-3.5 text-slate-400 ml-1.5" />
             <select
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value as any)}
-              className="bg-transparent text-[#202622] focus:outline-none pr-1 cursor-pointer"
+              className="bg-transparent text-slate-800 dark:text-slate-200 focus:outline-none pr-1 cursor-pointer"
             >
               <option value="ALL">All Dates</option>
               <option value="TODAY">Today Only</option>
@@ -389,7 +389,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#F7F7F4] border border-[#E4E7E1] text-[#202622] text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-[#246B57]"
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500 dark:focus:border-teal-400"
           >
             <option value="ALL">All Statuses</option>
             <option value="READY_FOR_REVIEW">Ready for Review</option>
@@ -403,8 +403,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
       </div>
 
       <div className="overflow-x-auto mt-4">
-        <table className="w-full text-left text-xs text-[#202622]">
-          <thead className="bg-[#F7F7F4] text-[#69716B] uppercase text-[10px] font-bold tracking-wider border-b border-[#E4E7E1]">
+        <table className="w-full text-left text-xs text-slate-800 dark:text-slate-200">
+          <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200 dark:border-slate-800">
             <tr>
               <th className="py-3 px-4">Document Filename</th>
               <th className="py-3 px-4">File Format</th>
@@ -414,23 +414,23 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E4E7E1]">
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
             {filteredDocs.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-8 text-[#69716B]">
+                <td colSpan={6} className="text-center py-8 text-slate-400">
                   No matching documents found. Drop a PDF or image file above to ingest.
                 </td>
               </tr>
             ) : (
               filteredDocs.map((doc) => (
-                <tr key={doc.id} className="hover:bg-[#F7F7F4]/60 transition-colors">
-                  <td className="py-3.5 px-4 font-semibold text-[#202622] flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#F7F7F4] border border-[#E4E7E1] flex items-center justify-center text-[#246B57]">
+                <tr key={doc.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 px-4 font-semibold text-slate-900 dark:text-white flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-indigo-600 dark:text-teal-400">
                       <FileText className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="font-medium text-[#202622]">{doc.filename}</p>
-                      <p className="text-[10px] text-[#69716B]">{new Date(doc.created_at).toLocaleString()}</p>
+                      <p className="font-medium text-slate-900 dark:text-white">{doc.filename}</p>
+                      <p className="text-[10px] text-slate-400">{new Date(doc.created_at).toLocaleString()}</p>
                     </div>
                   </td>
 
@@ -438,7 +438,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
 
                   <td className="py-3.5 px-4">{getCategoryBadge(doc)}</td>
 
-                  <td className="py-3.5 px-4 font-mono text-[#69716B] text-[11px]">
+                  <td className="py-3.5 px-4 font-mono text-slate-500 dark:text-slate-400 text-[11px]">
                     {(doc.file_size_bytes / 1024).toFixed(1)} KB
                   </td>
 
@@ -448,14 +448,14 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => navigate(`/review/${doc.id}`)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#246B57]/10 text-[#246B57] hover:bg-[#246B57] hover:text-white transition-all text-xs font-semibold"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white border border-indigo-200 dark:border-indigo-800/50 transition-all text-xs font-semibold"
                       >
                         <Eye className="w-3.5 h-3.5" /> Inspect & Review
                       </button>
 
                       <button
                         onClick={() => openExportModal(doc)}
-                        className="p-1.5 rounded-lg bg-[#F7F7F4] border border-[#E4E7E1] text-[#69716B] hover:text-[#246B57] hover:border-[#246B57] transition-all"
+                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-teal-400 hover:border-indigo-300 dark:hover:border-teal-500/50 transition-all"
                         title="Open Export Center (JSON, CSV, Webhook)"
                       >
                         <Download className="w-3.5 h-3.5" />

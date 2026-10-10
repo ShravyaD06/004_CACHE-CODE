@@ -55,27 +55,27 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto bg-white border rounded-xl p-3.5 shadow-lg flex items-start gap-3 transition-all duration-300 animate-in fade-in slide-in-from-top-3 ${
+            className={`pointer-events-auto rounded-xl p-3.5 shadow-xl flex items-start gap-3 transition-all duration-300 animate-in fade-in slide-in-from-top-3 border backdrop-blur-xs ${
               toast.type === 'error'
-                ? 'border-[#FCE8E6] bg-[#FFF9F9]'
+                ? 'border-rose-200 dark:border-rose-800/80 bg-rose-50/95 dark:bg-rose-950/90 text-rose-900 dark:text-rose-100'
                 : toast.type === 'warning'
-                ? 'border-[#FEF7E0] bg-[#FFFDF5]'
-                : 'border-[#E4E7E1]'
+                ? 'border-amber-200 dark:border-amber-800/80 bg-amber-50/95 dark:bg-amber-950/90 text-amber-900 dark:text-amber-100'
+                : 'bg-white/95 dark:bg-slate-900/95 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100'
             }`}
           >
-            {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-[#246B57] shrink-0 mt-0.5" />}
-            {toast.type === 'info' && <FileText className="w-5 h-5 text-[#246B57] shrink-0 mt-0.5" />}
-            {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 text-[#B06000] shrink-0 mt-0.5" />}
-            {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-[#C5221F] shrink-0 mt-0.5" />}
+            {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />}
+            {toast.type === 'info' && <FileText className="w-5 h-5 text-indigo-600 dark:text-teal-400 shrink-0 mt-0.5" />}
+            {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />}
+            {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />}
 
             <div className="flex-1 min-w-0 pr-1">
-              <p className="text-xs font-bold text-[#202622] leading-snug">{toast.title}</p>
-              {toast.message && <p className="text-[11px] text-[#69716B] mt-0.5 leading-normal">{toast.message}</p>}
+              <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug">{toast.title}</p>
+              {toast.message && <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-normal">{toast.message}</p>}
             </div>
 
             <button
               onClick={() => removeToast(toast.id)}
-              className="p-1 rounded-md text-[#69716B] hover:text-[#202622] hover:bg-[#F7F7F4] transition-colors"
+              className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               aria-label="Dismiss notification"
             >
               <X className="w-3.5 h-3.5" />

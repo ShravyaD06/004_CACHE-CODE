@@ -229,25 +229,25 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/60 backdrop-blur-md transition-opacity animate-fade-in flex justify-end">
-      <div className="w-full max-w-lg bg-slate-900 h-full shadow-2xl flex flex-col border-l border-slate-800 text-slate-100">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/50 backdrop-blur-xs transition-opacity animate-fade-in flex justify-end">
+      <div className="w-full max-w-lg bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 transition-colors">
         
         {/* Header */}
-        <div className="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <Bot className="w-4 h-4 text-emerald-400" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 p-0.5 flex items-center justify-center shadow-sm">
+              <div className="w-full h-full bg-white dark:bg-slate-950 rounded-[10px] flex items-center justify-center">
+                <Bot className="w-4 h-4 text-indigo-600 dark:text-teal-400" />
               </div>
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-100 tracking-wide flex items-center gap-2">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
                 DocuSense Copilot
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-indigo-50 dark:bg-teal-500/10 text-indigo-700 dark:text-teal-400 border border-indigo-200 dark:border-teal-500/20">
                   Local Rule-Based Assistance
                 </span>
               </h2>
-              <span className="text-[11px] text-slate-400">Contextual document intelligence assistant</span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">Contextual document intelligence assistant</span>
             </div>
           </div>
 
@@ -256,14 +256,14 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
               <button
                 onClick={resetConversation}
                 title="Reset conversation"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors text-xs flex items-center gap-1"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-xs flex items-center gap-1"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
             )}
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -271,61 +271,61 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
         </div>
 
         {/* Conversation Message Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-slate-800">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-800">
           
           {/* Welcome State */}
           {messages.length === 0 && (
             <div className="space-y-4 my-2">
-              <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-teal-400">
                   <FileText className="w-4 h-4" /> Welcome to Document Assistant
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   I can analyze the active document to explain classification logic, detail validation warnings, audit missing fields, or summarize extracted values.
                 </p>
               </div>
 
               <div>
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Quick Action Prompts</label>
+                <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Quick Action Prompts</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleQuickAction('summarize_extracted_information')}
-                    className="text-left text-xs p-3 bg-slate-950/40 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 rounded-xl text-slate-200 transition-all font-medium flex items-center space-x-2"
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-indigo-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-teal-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >
                     <span>📊</span>
                     <span>Summarize document</span>
                   </button>
                   <button
                     onClick={() => handleQuickAction('explain_validation_errors')}
-                    className="text-left text-xs p-3 bg-slate-950/40 hover:bg-amber-950/40 border border-slate-800 hover:border-amber-500/50 rounded-xl text-slate-200 transition-all font-medium flex items-center space-x-2"
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-amber-50 dark:hover:bg-amber-950/40 border border-slate-200 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >
                     <span>⚠️</span>
                     <span>Explain warnings</span>
                   </button>
                   <button
                     onClick={() => handleQuickAction('find_missing_fields')}
-                    className="text-left text-xs p-3 bg-slate-950/40 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 rounded-xl text-slate-200 transition-all font-medium flex items-center space-x-2"
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200 dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >
                     <span>❓</span>
                     <span>Find missing fields</span>
                   </button>
                   <button
                     onClick={() => handleQuickAction('explain_classification')}
-                    className="text-left text-xs p-3 bg-slate-950/40 hover:bg-cyan-950/40 border border-slate-800 hover:border-cyan-500/50 rounded-xl text-slate-200 transition-all font-medium flex items-center space-x-2"
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 border border-slate-200 dark:border-slate-800 hover:border-cyan-300 dark:hover:border-cyan-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >
                     <span>🔍</span>
                     <span>Explain classification</span>
                   </button>
                   <button
                     onClick={() => handleQuickAction('explain_conflicting_values')}
-                    className="text-left text-xs p-3 bg-slate-950/40 hover:bg-indigo-950/40 border border-slate-800 hover:border-indigo-500/50 rounded-xl text-slate-200 transition-all font-medium flex items-center space-x-2"
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >
                     <span>⚔️</span>
                     <span>Check conflicts</span>
                   </button>
                   <button
                     onClick={() => handleQuickAction('explain_corrections')}
-                    className="text-left text-xs p-3 bg-slate-950/40 hover:bg-teal-950/40 border border-slate-800 hover:border-teal-500/50 rounded-xl text-slate-200 transition-all font-medium flex items-center space-x-2"
+                    className="text-left text-xs p-3 bg-slate-50 dark:bg-slate-950/40 hover:bg-teal-50 dark:hover:bg-teal-950/40 border border-slate-200 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-500/50 rounded-xl text-slate-800 dark:text-slate-200 transition-all font-medium flex items-center space-x-2"
                   >
                     <span>✍️</span>
                     <span>Audit corrections</span>
@@ -341,25 +341,25 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
               key={msg.id}
               className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-1 animate-fade-in`}
             >
-              <div className="flex items-center gap-2 text-[10px] text-slate-500 px-1">
+              <div className="flex items-center gap-2 text-[10px] text-slate-400 dark:text-slate-500 px-1">
                 <span>{msg.role === 'user' ? 'You' : 'DocuSense Assistant'}</span>
                 <span>•</span>
                 <span>{msg.timestamp}</span>
               </div>
 
               <div
-                className={`max-w-[90%] rounded-2xl p-3.5 shadow-md ${
+                className={`max-w-[90%] rounded-2xl p-3.5 shadow-sm ${
                   msg.role === 'user'
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-tr-xs'
+                    ? 'bg-gradient-to-r from-indigo-600 to-teal-600 text-white rounded-tr-xs'
                     : msg.isError
-                    ? 'bg-rose-950/50 border border-rose-800/80 text-rose-200 rounded-tl-xs'
-                    : 'bg-slate-950 border border-slate-800 text-slate-100 rounded-tl-xs'
+                    ? 'bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 text-rose-800 dark:text-rose-200 rounded-tl-xs'
+                    : 'bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-xs'
                 }`}
               >
                 {msg.title && (
-                  <div className="text-xs font-bold text-emerald-400 pb-2 mb-2 border-b border-slate-800 flex items-center justify-between">
+                  <div className="text-xs font-bold text-indigo-600 dark:text-teal-400 pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                     <span>{msg.title}</span>
-                    <span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-mono bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full">
                       Rule-Based
                     </span>
                   </div>
@@ -369,8 +369,8 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
 
                 {/* Suggestions Chips */}
                 {msg.suggestions && msg.suggestions.length > 0 && (
-                  <div className="pt-2 mt-3 border-t border-slate-800">
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block mb-1.5">
+                  <div className="pt-2 mt-3 border-t border-slate-200 dark:border-slate-800">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider block mb-1.5">
                       Suggested Follow-ups
                     </span>
                     <div className="flex flex-wrap gap-1.5">
@@ -378,7 +378,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
                         <button
                           key={i}
                           onClick={() => handleQuickAction('custom_prompt', sug)}
-                          className="text-[11px] bg-slate-900 border border-slate-700 hover:border-emerald-500 text-slate-300 hover:text-emerald-300 px-2.5 py-1 rounded-lg transition-colors"
+                          className="text-[11px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-teal-400 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-teal-300 px-2.5 py-1 rounded-lg transition-colors shadow-xs"
                         >
                           {sug}
                         </button>
@@ -392,17 +392,17 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
 
           {/* Loading Indicator */}
           {loading && (
-            <div className="flex items-center space-x-2 text-xs text-emerald-400 bg-slate-950 border border-slate-800 p-3 rounded-2xl w-fit animate-pulse">
-              <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+            <div className="flex items-center space-x-2 text-xs text-indigo-600 dark:text-teal-400 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl w-fit animate-pulse shadow-xs">
+              <div className="w-4 h-4 border-2 border-indigo-600 dark:border-teal-400 border-t-transparent rounded-full animate-spin" />
               <span>Analyzing document context & extraction results...</span>
             </div>
           )}
 
           {/* Retry Action if API Failed */}
           {lastFailedAction && !loading && (
-            <div className="p-3 bg-rose-950/40 border border-rose-800 rounded-xl flex items-center justify-between text-xs text-rose-300">
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl flex items-center justify-between text-xs text-rose-700 dark:text-rose-300">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
                 <span>Assistant request encountered an error.</span>
               </div>
               <button
@@ -418,7 +418,7 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
         </div>
 
         {/* Input Footer */}
-        <div className="p-3 bg-slate-950 border-t border-slate-800">
+        <div className="p-3 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
           <form onSubmit={handleCustomSubmit} className="flex space-x-2">
             <input
               type="text"
@@ -426,12 +426,12 @@ export const CopilotDrawer: React.FC<CopilotDrawerProps> = ({ documentId, isOpen
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Ask Copilot about fields, values, errors..."
               disabled={loading}
-              className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-50"
+              className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-teal-500 focus:outline-none disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={loading || !customPrompt.trim()}
-              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3.5 py-2.5 rounded-xl text-xs font-semibold disabled:opacity-50 transition-all flex items-center justify-center shadow-lg shadow-emerald-600/20 active:scale-95"
+              className="bg-indigo-600 hover:bg-indigo-700 dark:bg-teal-600 dark:hover:bg-teal-500 text-white px-3.5 py-2.5 rounded-xl text-xs font-semibold disabled:opacity-50 transition-all flex items-center justify-center shadow-md active:scale-95"
             >
               <Send className="w-4 h-4" />
             </button>

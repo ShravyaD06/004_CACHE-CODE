@@ -7,6 +7,7 @@ import { SideBySideReviewCanvas } from './components/SideBySideReviewCanvas';
 import { IntegrityPanel } from './components/IntegrityPanel';
 import { SchemaViewer } from './components/SchemaViewer';
 import { ToastProvider } from './components/ToastNotification';
+import { ThemeProvider } from './context/ThemeContext';
 import { IntroAnimation } from './components/IntroAnimation';
 import { api } from './services/api';
 import type { DocumentItem } from './types';
@@ -17,7 +18,7 @@ const AppLayout: React.FC<{ children: React.ReactNode; documentCount: number; do
   documents
 }) => {
   return (
-    <div className="min-h-screen bg-[#0D1117] text-[#E6EDF3] font-sans antialiased selection:bg-[#246B57]/30 selection:text-white pb-12">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0F1D] text-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-white transition-colors duration-200 pb-12">
       <Header documentCount={documentCount} documents={documents} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 mt-6 space-y-6">{children}</main>
     </div>
@@ -113,11 +114,13 @@ export const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <ToastProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ToastProvider>
+    </ThemeProvider>
   );
 };
 
