@@ -77,6 +77,8 @@ def validate_extracted_fields(doc_type: str, fields: list, classification_confid
                     if overall_status != "NEEDS_CLASSIFICATION_REVIEW":
                         overall_status = "NEEDS_REVIEW"
                 else:
+                    if "evidence" in f and isinstance(f["evidence"], dict):
+                        f["evidence"]["raw_unnormalized_value"] = val
                     f["extracted_value"] = parsed_date  # Normalize date to YYYY-MM-DD
 
             elif key == "email":
@@ -106,24 +108,46 @@ def validate_extracted_fields(doc_type: str, fields: list, classification_confid
                     if overall_status != "NEEDS_CLASSIFICATION_REVIEW":
                         overall_status = "NEEDS_REVIEW"
 
+            # Preserve raw amount value for currency fields
+            if any(term in key for term in ["amount", "total", "subtotal", "fare", "fee"]):
+                if "evidence" in f and isinstance(f["evidence"], dict) and "raw_unnormalized_value" not in f["evidence"]:
+                    f["evidence"]["raw_unnormalized_value"] = val
+
     # 4. Cross-Field Invoice Arithmetic Math Check (Subtotal + Tax == Total)
     if doc_type == "invoice":
         subtotal_val = parse_float_currency(field_map.get("subtotal", {}).get("extracted_value"))
         tax_val = parse_float_currency(field_map.get("tax_amount", {}).get("extracted_value"))
         total_val = parse_float_currency(field_map.get("total_amount", {}).get("extracted_value"))
 
-        if subtotal_val is not None and tax_val is not None and total_val is not None:
-            expected_total = round(subtotal_val + tax_val, 2)
-            if abs(expected_total - total_val) > 0.05:
-                issues.append({
-                    "field_id": None,
-                    "field_key": "total_amount",
-                    "issue_type": "ARITHMETIC_MISMATCH",
-                    "severity": "WARNING",
-                    "message": f"Arithmetic discrepancy: Subtotal (${subtotal_val:.2f}) + Tax (${tax_val:.2f}) = ${expected_total:.2f}, but Total Amount is ${total_val:.2f}."
-                })
-                if overall_status != "NEEDS_CLASSIFICATION_REVIEW":
-                    overall_status = "NEEDS_REVIEW"
+        if subtotal_val is not None and total_val is not None:
+            if tax_val is not None:
+                expected_total = round(subtotal_val + tax_val, 2)
+                if abs(expected_total - total_val) > 0.05:
+                    issues.append({
+                        "field_id": None,
+                        "field_key": "total_amount",
+                        "issue_type": "ARITHMETIC_MISMATCH",
+                        "severity": "WARNING",
+                        "message": f"Arithmetic discrepancy: Subtotal (${subtotal_val:.2f}) + Tax (${tax_val:.2f}) = ${expected_total:.2f}, but Total Amount is ${total_val:.2f}."
+                    })
+                    if "total_amount" in field_map:
+                        field_map["total_amount"]["validation_status"] = "ARITHMETIC_MISMATCH"
+                    if overall_status != "NEEDS_CLASSIFICATION_REVIEW":
+                        overall_status = "NEEDS_REVIEW"
+            else:
+                # Tax line is not itemized: subtotal should equal total or discrepancy flagged
+                if abs(subtotal_val - total_val) > 0.05:
+                    issues.append({
+                        "field_id": None,
+                        "field_key": "total_amount",
+                        "issue_type": "ARITHMETIC_MISMATCH",
+                        "severity": "WARNING",
+                        "message": f"Arithmetic discrepancy: Subtotal (${subtotal_val:.2f}) does not match Total Amount (${total_val:.2f}) (unaccounted difference of ${abs(subtotal_val - total_val):.2f}) with no tax amount itemized."
+                    })
+                    if "total_amount" in field_map:
+                        field_map["total_amount"]["validation_status"] = "ARITHMETIC_MISMATCH"
+                    if overall_status != "NEEDS_CLASSIFICATION_REVIEW":
+                        overall_status = "NEEDS_REVIEW"
 
     return fields, issues, overall_status
 

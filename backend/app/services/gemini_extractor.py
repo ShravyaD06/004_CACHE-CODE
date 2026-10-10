@@ -134,8 +134,47 @@ def is_gemini_available() -> bool:
     return _get_gemini_client() is not None
 
 
+def test_gemini_connection() -> dict:
+    """
+    Performs a minimal live API connectivity test to verify key validity and model availability.
+    Never exposes or logs the actual API key.
+    """
+    client = _get_gemini_client()
+    if client is None:
+        return {
+            "status": "NOT_CONFIGURED",
+            "message": "GEMINI_API_KEY environment variable is not configured. Local rule engine is active as deterministic fallback.",
+            "model_id": get_gemini_model_id(),
+            "connected": False
+        }
+
+    model_id = get_gemini_model_id()
+    try:
+        response = client.models.generate_content(
+            model=model_id,
+            contents="Respond with the single word: READY"
+        )
+        resp_text = response.text.strip() if response.text else ""
+        return {
+            "status": "CONNECTED",
+            "message": f"Successfully connected to Gemini API with model '{model_id}'.",
+            "model_id": model_id,
+            "response_preview": resp_text[:50],
+            "connected": True
+        }
+    except Exception as e:
+        err_msg = str(e)
+        logger.warning(f"Gemini live connectivity test failed: {err_msg}")
+        return {
+            "status": "ERROR",
+            "message": f"Gemini connection failed: {err_msg}",
+            "model_id": model_id,
+            "connected": False
+        }
+
+
 def get_gemini_diagnostics() -> dict:
-    """Returns transparent diagnostics on Gemini status."""
+    """Returns transparent diagnostics on Gemini status without exposing secrets."""
     has_key = bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or GEMINI_API_KEY)
     return {
         "gemini_available": is_gemini_available(),

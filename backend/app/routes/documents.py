@@ -17,9 +17,9 @@ from backend.app.schemas import (
 )
 from backend.app.services.file_inspector import detect_actual_file_type
 from backend.app.services.ocr_engine import extract_pdf_blocks_and_geometry, evaluate_image_quality, get_ocr_engine_status
-from backend.app.services.classifier import classify_document
+from backend.app.services.classifier import classify_document, get_classifier_metrics
 from backend.app.services.extractor import extract_fields_from_document
-from backend.app.services.gemini_extractor import extract_with_gemini, is_gemini_available, get_gemini_diagnostics
+from backend.app.services.gemini_extractor import extract_with_gemini, is_gemini_available, get_gemini_diagnostics, test_gemini_connection
 from backend.app.services.validator import validate_extracted_fields, parse_and_validate_date
 from backend.app.services.export_service import export_document_json, export_document_csv
 
@@ -592,3 +592,16 @@ def get_pipeline_status():
             "features": ["format_check", "required_field_check", "arithmetic_cross_check", "conflict_detection"]
         }
     }
+
+
+@router.get("/gemini/test")
+def check_gemini_connection():
+    """Performs a live connectivity test to Gemini API without exposing credentials."""
+    return test_gemini_connection()
+
+
+@router.get("/classifier/metrics")
+def get_classifier_evaluation():
+    """Returns measured classifier evaluation metrics, dataset size, and confusion matrix."""
+    return get_classifier_metrics()
+

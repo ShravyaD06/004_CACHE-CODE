@@ -97,9 +97,43 @@ def get_ocr_engine_status() -> dict:
 # ---------------------------------------------------------------------------
 # Image quality evaluation & preprocessing
 # ---------------------------------------------------------------------------
+def deskew_image(img_gray: np.ndarray) -> tuple[np.ndarray, float]:
+    """
+    Detects skew angle in scanned document using minimum area bounding box
+    and rotates the image to upright alignment.
+    """
+    try:
+        # Threshold to identify content pixels
+        thresh = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+        coords = np.column_stack(np.where(thresh > 0))
+        if len(coords) < 150:
+            return img_gray, 0.0
+
+        angle = cv2.minAreaRect(coords)[-1]
+        if angle < -45:
+            angle = -(90 + angle)
+        elif angle > 45:
+            angle = 90 - angle
+        else:
+            angle = -angle
+
+        # Only deskew if skew is noticeable but not excessive
+        if abs(angle) < 0.6 or abs(angle) > 45.0:
+            return img_gray, 0.0
+
+        (h, w) = img_gray.shape[:2]
+        center = (w // 2, h // 2)
+        M = cv2.getRotationMatrix2D(center, angle, 1.0)
+        deskewed = cv2.warpAffine(img_gray, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+        return deskewed, round(float(angle), 2)
+    except Exception as e:
+        logger.warning(f"Deskewing computation warning: {e}")
+        return img_gray, 0.0
+
+
 def evaluate_image_quality(image_path: str) -> dict:
     """
-    Evaluates scan blur variance, contrast, and resolution quality.
+    Evaluates scan blur variance, contrast, brightness, and skew angle.
     Returns quality score (0-100), blur flag, and status label.
     """
     try:
@@ -109,6 +143,8 @@ def evaluate_image_quality(image_path: str) -> dict:
                 "quality_score": 85,
                 "is_blurry": False,
                 "is_low_contrast": False,
+                "is_skewed": False,
+                "skew_angle": 0.0,
                 "status_label": "High Quality Scan",
                 "laplacian_variance": 120.0,
                 "std_dev": 45.0
@@ -122,14 +158,23 @@ def evaluate_image_quality(image_path: str) -> dict:
         std_dev = np.std(img)
         is_low_contrast = bool(std_dev < 35.0)
 
+        # 3. Skew evaluation
+        _, skew_angle = deskew_image(img)
+        is_skewed = bool(abs(skew_angle) > 1.5)
+
         # Compute combined score (0 - 100)
         score = min(100, max(20, int((variance / 5.0) + (std_dev * 1.2))))
+        if is_skewed:
+            score = max(25, score - 15)
+
         if is_blurry and is_low_contrast:
             label = "Low Quality / Blurry & Low Contrast"
         elif is_blurry:
             label = "Blurry Scan Detected"
         elif is_low_contrast:
             label = "Low Contrast Scan"
+        elif is_skewed:
+            label = f"Skewed Scan Detected ({skew_angle}°)"
         elif score < 60:
             label = "Moderate Quality Scan"
         else:
@@ -141,6 +186,8 @@ def evaluate_image_quality(image_path: str) -> dict:
             "std_dev": round(float(std_dev), 2),
             "is_blurry": is_blurry,
             "is_low_contrast": is_low_contrast,
+            "is_skewed": is_skewed,
+            "skew_angle": skew_angle,
             "status_label": label
         }
     except Exception as e:
@@ -149,6 +196,8 @@ def evaluate_image_quality(image_path: str) -> dict:
             "quality_score": 80,
             "is_blurry": False,
             "is_low_contrast": False,
+            "is_skewed": False,
+            "skew_angle": 0.0,
             "status_label": "Standard Quality Scan",
             "laplacian_variance": 100.0,
             "std_dev": 40.0
@@ -157,13 +206,20 @@ def evaluate_image_quality(image_path: str) -> dict:
 
 def preprocess_image_enhancement(img_gray: np.ndarray) -> np.ndarray:
     """
-    Applies CLAHE (Contrast Limited Adaptive Histogram Equalization)
-    and adaptive thresholding for poor-scan contrast recovery.
+    Applies Gaussian denoising, CLAHE (Contrast Limited Adaptive Histogram Equalization),
+    and deskewing for scan contrast recovery.
     """
     try:
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        enhanced = clahe.apply(img_gray)
-        return enhanced
+        # 1. Subtle denoising to suppress scanner artifacts
+        denoised = cv2.GaussianBlur(img_gray, (3, 3), 0)
+
+        # 2. CLAHE contrast equalization
+        clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
+        enhanced = clahe.apply(denoised)
+
+        # 3. Deskew
+        deskewed, _ = deskew_image(enhanced)
+        return deskewed
     except Exception:
         return img_gray
 

@@ -49,8 +49,9 @@ def wait_for_job(job_id, timeout=15):
 def upload_and_process(filename):
     filepath = os.path.join(SAMPLE_DIR, filename)
     assert os.path.exists(filepath), f"File not found: {filepath}"
+    mime = "image/png" if filename.lower().endswith(".png") else "application/pdf"
     with open(filepath, "rb") as f:
-        res = requests.post(f"{BASE_URL}/api/documents/upload", files={"file": (filename, f, "application/pdf")})
+        res = requests.post(f"{BASE_URL}/api/documents/upload", files={"file": (filename, f, mime)})
     assert res.status_code == 200, f"Upload failed for {filename}: {res.text}"
     upload_data = res.json()
     job_id = upload_data["job_id"]
@@ -104,7 +105,10 @@ def run_all_tests():
 
     subtotal_field = fields.get("subtotal")
     tax_field = fields.get("tax_amount")
-    print(f"  • Subtotal: {subtotal_field.get('extracted_value')}, Tax: {tax_field.get('tax_amount') if tax_field else None}")
+    tax_val_extracted = tax_field.get("extracted_value") if tax_field else None
+    print(f"  • Subtotal: {subtotal_field.get('extracted_value')}, Tax: {tax_val_extracted}")
+    assert tax_field is not None and tax_val_extracted is not None, "tax_amount field was not extracted"
+    assert "250" in tax_val_extracted, f"Expected 250 in tax, got {tax_val_extracted}"
 
     # Verify no arithmetic mismatch issue
     arith_issues = [i for i in inv_data["validation_issues"] if i["issue_type"] == "ARITHMETIC_MISMATCH"]
@@ -157,8 +161,11 @@ def run_all_tests():
     conf_doc_id, conf_data = upload_and_process("sample_invoice_conflict.pdf")
     conf_fields = {f["field_key"]: f for f in conf_data["extracted_fields"]}
     print(f"  * Subtotal: {conf_fields.get('subtotal', {}).get('extracted_value')}, Total: {conf_fields.get('total_amount', {}).get('extracted_value')}")
-    print(f"  * Issues Detected: {[i['issue_type'] for i in conf_data['validation_issues']]}")
+    detected_issues = [i["issue_type"] for i in conf_data["validation_issues"]]
+    print(f"  * Issues Detected: {detected_issues}")
     print(f"  * Status Flag: {conf_data['status']}")
+    assert "ARITHMETIC_MISMATCH" in detected_issues, f"Expected ARITHMETIC_MISMATCH issue, got {detected_issues}"
+    assert conf_data["status"] == "NEEDS_REVIEW", f"Expected NEEDS_REVIEW status, got {conf_data['status']}"
     print("  [OK] Test 5 Passed!")
 
     # ---------------------------------------------------------
@@ -214,9 +221,60 @@ def run_all_tests():
     print(f"  * Copilot explained classification rationale!")
     print("  [OK] Test 7 Passed!")
 
+    # ---------------------------------------------------------
+    # TEST 8: Payment / Tuition Fee Receipt (sample_receipt.pdf)
+    # ---------------------------------------------------------
+    print("\n[TEST 8] Verifying Fee Receipt (sample_receipt.pdf)...")
+    rec_doc_id, rec_data = upload_and_process("sample_receipt.pdf")
+    assert rec_data["doc_type"] == "receipt", f"Expected receipt, got {rec_data['doc_type']}"
+    rec_fields = {f["field_key"]: f for f in rec_data["extracted_fields"]}
+    rec_no = rec_fields.get("receipt_number")
+    payer = rec_fields.get("payer_name")
+    amount = rec_fields.get("payment_amount")
+    assert rec_no and "REC-2026-4421" in rec_no["extracted_value"]
+    assert payer and "David K. Vance" in payer["extracted_value"]
+    assert amount and "3,500.00" in amount["extracted_value"]
+    print(f"  * Receipt Number: {rec_no['extracted_value']}")
+    print(f"  * Payer Name: {payer['extracted_value']}")
+    print(f"  * Amount Paid: {amount['extracted_value']}")
+    print(f"  * Classification: {rec_data['doc_type_label']} ({int(rec_data['classification_confidence']*100)}%)")
+    print("  [OK] Test 8 Passed!")
+
+    # ---------------------------------------------------------
+    # TEST 9: Travel Ticket & Itinerary (sample_travel_ticket.pdf)
+    # ---------------------------------------------------------
+    print("\n[TEST 9] Verifying Travel Ticket (sample_travel_ticket.pdf)...")
+    ticket_doc_id, ticket_data = upload_and_process("sample_travel_ticket.pdf")
+    assert ticket_data["doc_type"] == "travel_ticket", f"Expected travel_ticket, got {ticket_data['doc_type']}"
+    ticket_fields = {f["field_key"]: f for f in ticket_data["extracted_fields"]}
+    pnr = ticket_fields.get("ticket_number")
+    passenger = ticket_fields.get("passenger_name")
+    fare = ticket_fields.get("total_fare")
+    assert pnr and "PNR-SKY-9921" in pnr["extracted_value"]
+    assert passenger and "Elena Rostova" in passenger["extracted_value"]
+    assert fare and "680.00" in fare["extracted_value"]
+    print(f"  * Ticket / PNR: {pnr['extracted_value']}")
+    print(f"  * Passenger Name: {passenger['extracted_value']}")
+    print(f"  * Total Fare: {fare['extracted_value']}")
+    print(f"  * Classification: {ticket_data['doc_type_label']} ({int(ticket_data['classification_confidence']*100)}%)")
+    print("  [OK] Test 9 Passed!")
+
+    # ---------------------------------------------------------
+    # TEST 10: Scanned Raster Image Processing (sample_scanned_receipt.png)
+    # ---------------------------------------------------------
+    print("\n[TEST 10] Verifying Scanned Image Processing (sample_scanned_receipt.png)...")
+    scan_doc_id, scan_data = upload_and_process("sample_scanned_receipt.png")
+    assert scan_data["actual_file_type"] in ("PNG", "IMAGE", "JPG")
+    print(f"  * Scanned File Type: {scan_data['actual_file_type']}")
+    print(f"  * Scanned Image Quality Score: {scan_data['image_quality_score']}/100 ({scan_data['quality_label']})")
+    print(f"  * Document Type: {scan_data['doc_type']} ({scan_data['doc_type_label']})")
+    print(f"  * Scanned image ingested and processed through OpenCV pipeline successfully!")
+    print("  [OK] Test 10 Passed!")
+
     print("\n" + "=" * 70)
-    print("  ALL 7 E2E INTEGRATION & PIPELINE TESTS COMPLETED SUCCESSFULLY!")
+    print("  ALL 10 COMPLETE END-TO-END PIPELINE TESTS COMPLETED SUCCESSFULLY!")
     print("=" * 70)
 
 if __name__ == "__main__":
     run_all_tests()
+

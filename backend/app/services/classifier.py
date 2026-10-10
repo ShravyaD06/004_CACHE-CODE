@@ -7,93 +7,83 @@ Classification Targets:
 - 'certificate': Academic / Professional Certificate
 - 'application_form': Official Membership / Service Application
 - 'travel_ticket': Travel Ticket / Boarding Pass / Travel Invoice
-- 'unclassified': Unknown / Needs Review
+- 'unclassified': Unknown / Out-of-Distribution / Needs Review
 
 Architecture:
 1. Genuine Machine Learning model: TF-IDF vectorizer + Multinomial Naive Bayes
-   classifier trained on characteristic multi-domain document corpora.
-2. Keyword rules engine: Used as transparent fallback when ML confidence is marginal
+   classifier trained on characteristic multi-domain document corpora with strict train/test split.
+2. Persisted Model Artifact: Loaded from disk (joblib) with on-demand retraining support.
+3. Keyword rules engine: Used as transparent fallback when ML confidence is marginal
    or for offline edge cases.
-3. Transparent provenance: Explicitly labels whether classification was performed by
-   'ml_model', 'keyword_rules_fallback', or 'manual_override'.
+4. Transparent provenance: Explicitly labels whether classification was performed by
+   'ml_tfidf_model', 'keyword_rules_fallback', or 'manual_override'.
 """
 
 import os
+import json
 import logging
-from typing import Optional
+import joblib
+from typing import Optional, Dict, Any
+
+from backend.app.services.train_classifier import train_and_evaluate
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Training corpus for genuine Scikit-Learn TF-IDF classification model
-# ---------------------------------------------------------------------------
-_TRAINING_CORPUS = [
-    # INVOICE
-    ("tax invoice acme cloud solutions inc 100 tech park way suite 400 invoice no inv 2026 8891 date 2026 09 28 bill to enterprise operations dept item description qty amount cloud hosting infrastructure monthly subtotal 1200 00 tax amount 250 00 grand total 1450 00", "invoice"),
-    ("commercial invoice bill to customer name gstin tax id place of supply payment due date subtotal sales tax vat balance due net amount remitted remittance terms", "invoice"),
-    ("invoice vendor supplier billed to shipping address line items unit price total amount due discount gstin tin hsn sac code rate of tax total value payable", "invoice"),
-    ("proforma invoice services rendered consulting fee invoice number po number payment terms wire transfer net 30 due upon receipt total payable usd", "invoice"),
-    ("tax invoice supply of software services vendor gstin buyer gstin place of supply reverse charge invoice ref invoice date sub total igst cgst sgst total invoice value", "invoice"),
-    
-    # RECEIPT
-    ("payment receipt official fee receipt tuition fee received with thanks from student name roll no transaction id payment mode online bank ref fee amount paid balance zero", "receipt"),
-    ("cash receipt payment acknowledgment received from payer sum of dollars for registration fee payment method credit card authorization code terminal id thank you", "receipt"),
-    ("challan fee receipt university of science tuition deposit examination fee semester charges bank transaction reference payment date amount paid in full cashier signature", "receipt"),
-    ("donation receipt charitable trust payment received acknowledgment tax exempt section 80g receipt number payment voucher amount received", "receipt"),
-    ("store sales receipt retail customer purchase pos register transaction number payment method card cash total paid change given cashier merchant copy", "receipt"),
-
-    # CERTIFICATE
-    ("certificate of completion this is to certify that alex m mercer has successfully completed the advanced course in artificial intelligence and machine learning issued by sapthagiri nps university issue date credential id cert ai 2026", "certificate"),
-    ("degree certificate this is to certify that student has fulfilled all requirements for the degree of bachelor of engineering computer science with honors university senate convocation date registrar chancellor", "certificate"),
-    ("certificate of excellence awarded to recipient in recognition of outstanding performance and dedication during the annual conference board of directors authorized signatory", "certificate"),
-    ("professional certificate qualification accredited program completion verification credential identifier valid from valid until authorized training partner", "certificate"),
-    ("certificate of achievement hereby presented to for successfully mastering data science foundation awarded on by executive director seal of certification", "certificate"),
-
-    # APPLICATION FORM
-    ("official membership application form application ref no app 2026 5541 applicant name sarah jenkins email address sarah jenkins contact phone department data analytics passport number date of birth address", "application_form"),
-    ("job employment application form candidate full name personal details education history previous employment experience resume attached emergency contact signature of applicant applied date", "application_form"),
-    ("university admission application form student bio data father name mother name date of birth high school gpa course applied for declaration signed by candidate application fee paid ref", "application_form"),
-    ("passport renewal application form applicant information residential address permanent address contact mobile email national identity number declaration date", "application_form"),
-    ("loan credit application form applicant details gross monthly income employer name residential status marital status requested loan amount application reference number", "application_form"),
-
-    # TRAVEL TICKET
-    ("electronic ticket passenger itinerary receipt booking reference pnr airline flight departure terminal gate arrival seat class baggage allowance operator name travel date", "travel_ticket"),
-    ("train ticket booking confirmation pnr number passenger name coach seat berth status origin station destination station journey date train number arrival time total fare irctc", "travel_ticket"),
-    ("bus travel ticket boarding pass operator travels from city to city boarding point drop point seat no bus type departure time passenger details ticket price", "travel_ticket"),
-    ("airline boarding pass passenger name flight no origin destination boarding time gate seat booking ref pnr sequence carrier travel date ticket number", "travel_ticket"),
-    ("ferry voyage ticket passenger reservation departure port arrival port booking voucher operator vessel embarkation time passenger fare inclusive of port taxes", "travel_ticket"),
-]
+# Directory for ML model artifacts
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ARTIFACT_DIR = os.path.join(BASE_DIR, "ml_artifacts")
+MODEL_PATH = os.path.join(ARTIFACT_DIR, "document_classifier.joblib")
+METRICS_PATH = os.path.join(ARTIFACT_DIR, "eval_metrics.json")
 
 # ---------------------------------------------------------------------------
-# Initialise ML Pipeline
+# ML Pipeline Management (Lazy Loading & Retraining)
 # ---------------------------------------------------------------------------
 _ml_pipeline = None
 
 
-def _get_or_train_classifier():
-    """Builds and fits the genuine Scikit-Learn TF-IDF classifier on first call."""
+def get_classifier_pipeline():
+    """Returns the loaded Scikit-Learn pipeline, loading or training if necessary."""
     global _ml_pipeline
     if _ml_pipeline is not None:
         return _ml_pipeline
 
+    if os.path.exists(MODEL_PATH):
+        try:
+            _ml_pipeline = joblib.load(MODEL_PATH)
+            logger.info(f"Loaded trained document classifier from {MODEL_PATH}")
+            return _ml_pipeline
+        except Exception as e:
+            logger.warning(f"Error loading persisted classifier: {e}. Retraining...")
+
     try:
-        from sklearn.feature_extraction.text import TfidfVectorizer
-        from sklearn.naive_bayes import MultinomialNB
-        from sklearn.pipeline import Pipeline
-
-        texts = [item[0] for item in _TRAINING_CORPUS]
-        labels = [item[1] for item in _TRAINING_CORPUS]
-
-        _ml_pipeline = Pipeline([
-            ("tfidf", TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True, min_df=1)),
-            ("clf", MultinomialNB(alpha=0.1))
-        ])
-        _ml_pipeline.fit(texts, labels)
-        logger.info("Scikit-Learn TF-IDF Document Classifier successfully fitted and ready.")
+        metrics = train_and_evaluate(ARTIFACT_DIR)
+        _ml_pipeline = joblib.load(MODEL_PATH)
+        logger.info("Classifier successfully trained, evaluated, and loaded.")
         return _ml_pipeline
     except Exception as e:
-        logger.warning(f"Could not initialise Scikit-Learn classifier: {e}")
+        logger.error(f"Failed to train/load ML classifier: {e}")
         return None
+
+
+def retrain_model() -> Dict[str, Any]:
+    """Retrains the ML classifier, updates the persisted artifact, and returns new metrics."""
+    global _ml_pipeline
+    metrics = train_and_evaluate(ARTIFACT_DIR)
+    _ml_pipeline = joblib.load(MODEL_PATH)
+    logger.info("Classifier retrained and reloaded in memory.")
+    return metrics
+
+
+def get_classifier_metrics() -> Dict[str, Any]:
+    """Returns stored evaluation metrics and confusion matrix from the held-out test set."""
+    if os.path.exists(METRICS_PATH):
+        try:
+            with open(METRICS_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Error reading metrics artifact: {e}")
+    # If metrics not yet generated, train and evaluate
+    return train_and_evaluate(ARTIFACT_DIR)
 
 
 # ---------------------------------------------------------------------------
@@ -148,14 +138,13 @@ def classify_document(full_text: str, override_type: str = None) -> dict:
     # -----------------------------------------------------------------------
     # Step 1: Genuine Scikit-Learn ML Model Inference
     # -----------------------------------------------------------------------
-    clf_pipeline = _get_or_train_classifier()
+    clf_pipeline = get_classifier_pipeline()
     ml_predicted_type = None
     ml_confidence = 0.0
     ml_alternatives = []
 
     if clf_pipeline is not None:
         try:
-            # Predict probabilities
             classes = list(clf_pipeline.classes_)
             probs = clf_pipeline.predict_proba([text_lower])[0]
             ranked = sorted(zip(classes, probs), key=lambda x: x[1], reverse=True)
@@ -164,10 +153,10 @@ def classify_document(full_text: str, override_type: str = None) -> dict:
             ml_confidence = round(float(top_prob), 2)
 
             for c, p in ranked[1:4]:
-                if p > 0.08:
+                if p > 0.05:
                     ml_alternatives.append({
-                        "type": c,
-                        "label": LABELS.get(c, c),
+                        "type": str(c),
+                        "label": LABELS.get(str(c), str(c)),
                         "score": round(float(p) * 10, 1),
                         "probability": round(float(p), 3)
                     })
@@ -206,13 +195,18 @@ def classify_document(full_text: str, override_type: str = None) -> dict:
     # -----------------------------------------------------------------------
     # Step 3: Synthesis & Subtype Determination
     # -----------------------------------------------------------------------
-    # If ML model has high confidence (>= 0.50) and aligns with keywords, use ML
     chosen_type = None
     chosen_confidence = 0.50
-    classification_method = "ml_model"
+    classification_method = "ml_tfidf_model"
     reason = ""
 
-    if ml_predicted_type and ml_confidence >= 0.50 and (rule_best_score >= 1 or ml_confidence >= 0.70):
+    # Out-of-distribution or predicted unclassified check
+    if ml_predicted_type == "unclassified" or (ml_predicted_type and ml_confidence < 0.45 and rule_best_score == 0):
+        chosen_type = "unclassified"
+        chosen_confidence = max(0.30, ml_confidence) if ml_confidence < 0.60 else 0.35
+        classification_method = "ml_tfidf_model" if ml_predicted_type == "unclassified" else "keyword_rules_fallback"
+        reason = "Document classified as out-of-distribution or unclassified. Human review required to assign schema."
+    elif ml_predicted_type and ml_confidence >= 0.50 and (rule_best_score >= 1 or ml_confidence >= 0.70):
         chosen_type = ml_predicted_type
         chosen_confidence = min(0.98, max(0.65, ml_confidence))
         classification_method = "ml_tfidf_model"
@@ -221,7 +215,7 @@ def classify_document(full_text: str, override_type: str = None) -> dict:
         chosen_type = rule_best_type
         chosen_confidence = min(0.95, 0.65 + (rule_best_score * 0.08))
         classification_method = "keyword_rules_fallback"
-        reason = f"Classified by keyword rules: matched {rule_best_score} anchor keywords for '{rule_best_label}'."
+        reason = f"Classified by keyword rules fallback: matched {rule_best_score} anchor keywords for '{rule_best_label}'."
     elif rule_best_score == 1:
         chosen_type = rule_best_type
         chosen_confidence = 0.60
@@ -233,14 +227,15 @@ def classify_document(full_text: str, override_type: str = None) -> dict:
         classification_method = "keyword_rules_fallback"
         reason = "Insufficient keywords or pattern matches found to assign category."
 
-    best_label = LABELS.get(chosen_type, "Unknown Document")
+    chosen_type_str = str(chosen_type)
+    best_label = LABELS.get(chosen_type_str, "Unknown Document")
 
     # Subtype detection logic
-    subtype = f"{chosen_type}_standard"
-    if chosen_type == "receipt" and any(k in text_lower for k in ["fee", "tuition", "university", "college", "admission"]):
+    subtype = f"{chosen_type_str}_standard"
+    if chosen_type_str == "receipt" and any(k in text_lower for k in ["fee", "tuition", "university", "college", "admission"]):
         subtype = "university_fee_receipt"
         best_label = "University Fee Receipt"
-    elif chosen_type == "certificate" and any(k in text_lower for k in ["degree", "bachelor", "master", "phd"]):
+    elif chosen_type_str == "certificate" and any(k in text_lower for k in ["degree", "bachelor", "master", "phd"]):
         subtype = "degree_certificate"
         best_label = "Degree Certificate"
 
@@ -248,17 +243,17 @@ def classify_document(full_text: str, override_type: str = None) -> dict:
     alternatives = ml_alternatives if ml_alternatives else []
     if not alternatives and rule_scores[1][1] >= 1:
         alternatives.append({
-            "type": rule_scores[1][0],
+            "type": str(rule_scores[1][0]),
             "label": rule_scores[1][2],
-            "score": rule_scores[1][1]
+            "score": float(rule_scores[1][1])
         })
 
     return {
-        "doc_type": chosen_type,
+        "doc_type": chosen_type_str,
         "doc_subtype": subtype,
         "display_label": best_label,
-        "confidence": round(chosen_confidence, 2),
-        "is_uncertain": chosen_confidence < 0.70,
+        "confidence": float(round(chosen_confidence, 2)),
+        "is_uncertain": chosen_confidence < 0.70 or chosen_type_str == "unclassified",
         "alternatives": alternatives,
         "reason": reason,
         "classification_method": classification_method
