@@ -9,6 +9,7 @@ import { SchemaViewer } from './components/SchemaViewer';
 import { ToastProvider } from './components/ToastNotification';
 import { ThemeProvider } from './context/ThemeContext';
 import { IntroAnimation } from './components/IntroAnimation';
+import { MouseRecognizer } from './components/MouseRecognizer';
 import { api } from './services/api';
 import type { DocumentItem } from './types';
 
@@ -69,6 +70,7 @@ export const AppContent: React.FC = () => {
   return (
     <>
       <IntroAnimation />
+      <MouseRecognizer />
       <Routes>
         <Route
           path="/"
