@@ -1,0 +1,74 @@
+/* Obsidian + Aurora design tokens. Every colour used by the UI comes from here. */
+:root {
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Figtree', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #111310;
+  --surface: #1c201b;
+  --surface-2: #232822;
+  --input-bg: #151814;
+  --accent: #b8f36b;
+  --accent-2: #83d6ad;
+  --on-accent: #12200a;
+  --text: #f4f5ef;
+  --muted: #a0a59b;
+  --border: rgba(244, 245, 239, 0.1);
+  --border-strong: rgba(244, 245, 239, 0.22);
+  --danger: #ff9b8c;
+  --danger-bg: rgba(255, 123, 104, 0.12);
+  --success-bg: rgba(184, 243, 107, 0.1);
+  --info-bg: rgba(131, 214, 173, 0.1);
+  --warn: #f2cf6b;
+  --shadow-panel: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --glow: rgba(131, 214, 173, 0.1);
+
+  /* The brand panel is always dark, but tuned per theme. */
+  --brand-bg: #0b0d0a;
+  --brand-surface: rgba(244, 245, 239, 0.05);
+  --brand-border: rgba(244, 245, 239, 0.12);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f7f7f0;
+  --surface: #ffffff;
+  --surface-2: #f0f1e8;
+  --input-bg: #fbfbf6;
+  --accent: #285943;
+  --accent-2: #76a887;
+  --on-accent: #ffffff;
+  --text: #20251f;
+  --muted: #72796f;
+  --border: rgba(32, 37, 31, 0.12);
+  --border-strong: rgba(32, 37, 31, 0.3);
+  --danger: #b3261e;
+  --danger-bg: rgba(179, 38, 30, 0.07);
+  --success-bg: rgba(40, 89, 67, 0.08);
+  --info-bg: rgba(118, 168, 135, 0.14);
+  --warn: #8a6410;
+  --shadow-panel: 0 30px 60px -36px rgba(32, 37, 31, 0.35), 0 2px 6px rgba(32, 37, 31, 0.05);
+  --shadow-soft: 0 1px 2px rgba(32, 37, 31, 0.08);
+  --glow: rgba(118, 168, 135, 0.22);
+
+  --brand-bg: #10231a;
+  --brand-surface: rgba(247, 247, 240, 0.06);
+  --brand-border: rgba(247, 247, 240, 0.14);
+}
