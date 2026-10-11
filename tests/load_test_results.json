@@ -1,17 +1,17 @@
 {
   "concurrent_users": 100,
   "total_requests": 600,
-  "duration_seconds": 3.71,
-  "throughput_rps": 161.66,
+  "duration_seconds": 4.47,
+  "throughput_rps": 134.08,
   "success_rate_pct": 100.0,
   "failure_rate_pct": 0.0,
   "latencies_ms": {
-    "min": 5.44,
-    "mean": 513.22,
-    "p50": 470.78,
-    "p90": 1004.66,
-    "p95": 1199.36,
-    "p99": 1471.58,
-    "max": 1915.43
+    "min": 7.42,
+    "mean": 625.85,
+    "p50": 531.58,
+    "p90": 1462.64,
+    "p95": 1659.36,
+    "p99": 1798.56,
+    "max": 1882.27
   }
 }
