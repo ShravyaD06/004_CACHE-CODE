@@ -273,9 +273,15 @@ export const SideBySideReviewCanvas: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setIsCopilotOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-sm transition-all"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white font-bold text-xs shadow-sm transition-all group"
           >
-            <Bot className="w-3.5 h-3.5" /> AI Copilot
+            <Bot className="w-3.5 h-3.5" />
+            <span>AI Voice Copilot</span>
+            <span className="flex items-center gap-0.5 ml-0.5">
+              <span className="w-0.5 h-2 bg-teal-200 rounded-full animate-pulse"></span>
+              <span className="w-0.5 h-3 bg-white rounded-full animate-pulse"></span>
+              <span className="w-0.5 h-1.5 bg-teal-200 rounded-full animate-pulse"></span>
+            </span>
           </button>
 
           <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-xl">

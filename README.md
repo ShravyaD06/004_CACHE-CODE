@@ -126,7 +126,64 @@ python test_live_ingestion.py
 - `sample_docs/generate_sample_docs.py` — Synthetic PDF test generator.
 - `tests/test_backend.py` — Pytest test suite.
 - `test_live_ingestion.py` — End-to-end ingestion verification script.
-- `start_app.py` — Full-stack application launcher.
+- `frontend/src/components/EnterpriseExportModal.tsx` — Enterprise multi-ERP & webhook broadcast modal (SAP, Salesforce, Workday, QuickBooks).
+- `frontend/src/components/SectorInnovationsHub.tsx` — Enterprise multi-sector hub with 24 specialized workflows across Finance, HR, Education, and Banking.
+- `frontend/src/components/CameraScannerModal.tsx` — Real-time camera document scanning modal with binarization filters.
+- `frontend/src/components/DocumentCompareModal.tsx` — Side-by-side multi-document cross reconciliation.
+- `frontend/src/components/BatchAnalyticsModal.tsx` — Macro telemetry & field error rate anomaly heatmap.
+- `frontend/src/components/AuditCertificateModal.tsx` — Cryptographic ISO/IEC 27001 proof certificate generator.
+- `frontend/src/components/CopilotDrawer.tsx` — Web Speech AI Voice Copilot for spoken extraction queries.
+
+---
+
+## 7. Multi-Sector Enterprise Innovations Suite (24 Workflows)
+
+DocuSense AI incorporates specialized domain modules tailored for enterprise production sectors:
+
+### 1. Finance & Accounts Payable (AP)
+- **Automated 3-Way Purchase Order Matching:** Correlates Vendor Invoices against Purchase Orders (POs) and Goods Receipt Notes (GRNs) to verify quantity, unit rate, and total balance, flagging variances down to $0.01.
+- **Real-Time FX Currency Converter:** Interactive multi-currency converter (USD, EUR, GBP, INR, CAD) with live exchange rates and cross-border reverse-charge VAT/GST compliance.
+- **Early Payment Dynamic Discounting Optimizer:** Calculates cash discount savings and annualized ROI (e.g. 2/10 Net 30, 1/15 Net 45) for treasury liquidity optimization.
+- **Automated ERP Chart of Accounts (GL) Mapping:** Classifies expenses to standard accounting codes (`GL-64200 Cloud IT`, `GL-71100 Legal`, `GL-50200 Operations`) with automated cost center tagging.
+- **Dun & Bradstreet Paydex Vendor Credit Scorer:** Analyzes supplier prompt-payment historical score (0-100), financial solvency probability, and strategic counterparty risk tier.
+- **IRS Form W-9 / W-8BEN Tax Withholding & TIN Validation Engine:** Verifies US Taxpayer Identification Numbers (TIN/EIN) against IRS e-Services rules, confirming backup withholding exemptions.
+
+### 2. HR & Talent Onboarding
+- **1-Click Sensitive PII Redaction Mode:** Conforms with GDPR Article 17, CCPA, and DPDP mandates by automatically masking candidate Social Security Numbers (SSNs), National IDs, personal mobile numbers, and residential addresses with irreversible audit flags.
+- **USCIS Form I-9 & Right-to-Work Engine:** USCIS-compliant verification simulator supporting List A (US Passports) and List B+C (Driver Licenses + Social Security Cards) with automated E-Verify validation.
+- **Salary Banding & Compa-Ratio Calculator:** Computes candidate Compa-Ratio against internal grade midpoints to ensure pay equity and flag compensation exceptions.
+- **Candidate Skill Taxonomy & ATS Fit:** Automatically extracts technical skills and certifications from uploaded resumes and scores candidate match percentage against requisition requirements.
+- **Employment NDA & Restrictive Covenant Legal Scanner:** Evaluates employment agreements for non-compete durations (0-24 months), non-solicitation, and state enforceability under CA Bus. & Prof. § 16600.
+- **Role-Based IT Hardware & Cloud Access Provisioning Matrix:** Generates automated provisioning bundles (MacBook Pro M3 Max, YubiKey 5C NFC, Okta SSO, AWS IAM roles) mapped to engineering requisition tiers.
+
+### 3. Higher Education & Admissions
+- **International Grade Equivalence Calculator:** Automatically transforms foreign transcripts (Indian/European 10-Point CGPA, percentage marks, and UK honours systems) into standardized US 4.0 GPA equivalencies for rapid admissions committee reviews.
+- **Transfer Credit & Prerequisite Mapping:** Maps external courses (e.g., MATH-201, CS-150, PHYS-101) directly to internal departmental course codes and awarded credit hours.
+- **Standardized Language & Test Score Verifier:** Evaluates IELTS Academic, TOEFL iBT, and GRE scores with CEFR proficiency mapping and testing authority validity windows.
+- **Interactive Degree Audit Progress Tracker:** Real-time graduation readiness tracker measuring completed credit hours toward the 120-credit degree threshold.
+- **AI & Turnitin Plagiarism SOP / Essay Forensics Engine:** Analyzes candidate application essays and Statements of Purpose (SOP) for semantic perplexity, burstiness, and Turnitin repository match rates.
+- **Merit Scholarship & Tuition Grant Calculator:** Automatically determines merit fellowship awards (Dean's Presidential High Fellowship, 50% tuition reduction, GRA stipend) based on standardized benchmarks.
+- **Accreditation Registry Matcher:** Cross-checks the issuing university against recognized national accreditation registries (UGC, NAAC, ABET, CHEA) to detect diploma mills.
+
+### 4. Banking, FinTech & KYC Compliance
+- **Real-Time KYC Screening & AML Watchlists:** Evaluates applicant IDs against PEP (Politically Exposed Persons) databases and OFAC sanctions lists, assigning dynamic risk tiers (Tier 1 Low Risk to Tier 3 High Risk).
+- **Biometric Liveness & ID Portrait Match:** Compares live camera portraits against extracted ID photos with ISO 30107-3 compliant passive liveness checks and spoof detection.
+- **Proof of Address 90-Day Statutory Validator:** Statutory banking regulation checker that validates utility bills and bank statements against the statutory 90-day recency window.
+- **Debt-to-Income (DTI) Risk Underwriter:** Computes Basel III debt-to-income ratios from extracted earnings and liabilities to assign credit underwriting tiers.
+- **Source of Wealth & FATF High-Net-Worth (HNW) AML Declarations:** Verifies the audit trail of large capital origins (real estate liquidations, tech equity divested, corporate dividends) under FATF Recommendation 10.
+- **SWIFT MT103 / ISO 20022 Cross-Border Sanctions Gatekeeper:** Validates international wire transfer BIC routing identifiers and pacs.008 customer credit transfers against OFAC and FinCEN embargo registries.
+- **Cryptographic ISO/IEC 27001 Proof Certificate:** Generates verifiable compliance seals with SHA-256 digital signatures for statutory regulatory inquiries.
+
+---
+
+## 8. Enterprise Multi-ERP & Webhook Broadcast Engine
+
+DocuSense AI provides instant statutory feed distribution into enterprise software ecosystems via the **ERP Webhooks** console:
+- **SAP S/4HANA:** OData API v4 & IDoc XML financial document streaming.
+- **Salesforce CRM:** REST Object Feed for applicant & vendor profiles.
+- **Workday Enterprise HRIS:** Pre-hire credential onboarding payload sync.
+- **Intuit QuickBooks Online:** V3 JSON Accounting line item integration.
+- **Custom HTTPS Webhook:** Mutual TLS 1.3 encrypted broadcast with real-time response latency telemetry (`200 OK`).
 
 ---
 *DocuSense AI — CACHE CODE (Team ID 004)*

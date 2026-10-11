@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Upload, FileText, AlertCircle, RefreshCw, CheckCircle2, Terminal, X, Sparkles } from 'lucide-react';
+import { Upload, FileText, AlertCircle, RefreshCw, CheckCircle2, Terminal, X, Cpu, Camera } from 'lucide-react';
+import { CameraScannerModal } from './CameraScannerModal';
 import { api } from '../services/api';
 import { useToast } from './ToastNotification';
 
@@ -19,6 +20,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
   const [overrideType, setOverrideType] = useState<string>('');
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   // Screen 3: Live Batch Processing Stepper & Log State
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
@@ -174,7 +176,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
-                  <Sparkles className="w-5 h-5 animate-pulse" />
+                  <Cpu className="w-5 h-5 animate-pulse" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -348,8 +350,31 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onUploadSuccess }) => {
               Supports single or multi-file batch uploads: PDF, PNG, JPG, TIFF (Max 20MB per file)
             </p>
           </div>
+
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsCameraOpen(true);
+              }}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white font-bold text-xs transition-all shadow-md active:scale-95 flex items-center gap-2 group cursor-pointer"
+            >
+              <Camera className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+              <span>Scan with Device Camera</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-300 animate-ping"></span>
+            </button>
+          </div>
         </label>
       </div>
+
+      {/* Live Device Camera Scanner Modal */}
+      <CameraScannerModal
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+        onCapture={(file) => processFiles([file])}
+      />
 
       {errorMsg && (
         <div className="mt-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl flex items-center gap-3 text-rose-700 dark:text-rose-300 text-xs font-medium">

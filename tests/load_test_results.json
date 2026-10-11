@@ -1,0 +1,17 @@
+{
+  "concurrent_users": 100,
+  "total_requests": 600,
+  "duration_seconds": 3.71,
+  "throughput_rps": 161.66,
+  "success_rate_pct": 100.0,
+  "failure_rate_pct": 0.0,
+  "latencies_ms": {
+    "min": 5.44,
+    "mean": 513.22,
+    "p50": 470.78,
+    "p90": 1004.66,
+    "p95": 1199.36,
+    "p99": 1471.58,
+    "max": 1915.43
+  }
+}

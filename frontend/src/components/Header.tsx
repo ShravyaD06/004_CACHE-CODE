@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { AuthModal } from './AuthModal';
 import { Layers, Activity, Cpu, UserCheck, LogOut, Shield, User, Wrench } from 'lucide-react';
 import type { DocumentItem } from '../types';
 
@@ -27,17 +28,25 @@ export const Header: React.FC<HeaderProps> = ({ documentCount = 0, documents = [
     window.dispatchEvent(new Event('docusense_role_changed'));
   };
 
-  const user = (() => {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string; provider: string; picture?: string } | null>(() => {
     try {
       const saved = localStorage.getItem('docusense_user');
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
     }
-  })();
+  });
+
+  const handleLoginSuccess = (userObj: any) => {
+    setUser(userObj);
+    localStorage.setItem('docusense_user', JSON.stringify(userObj));
+    setIsAuthOpen(false);
+  };
 
   const handleSignOut = () => {
     localStorage.removeItem('docusense_user');
+    setUser(null);
     window.location.href = '/';
   };
 
@@ -137,12 +146,23 @@ export const Header: React.FC<HeaderProps> = ({ documentCount = 0, documents = [
           {/* Theme Toggle Button */}
           <ThemeToggle />
 
-          {/* Authenticated user indicator */}
-          {user && (
+          {/* Authenticated user indicator or Google Sign-In button */}
+          {user ? (
             <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300">
-                <UserCheck className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
-                <span className="hidden lg:inline">{user.name}</span>
+              <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-2xs">
+                {user.picture ? (
+                  <img src={user.picture} alt={user.name} className="w-5 h-5 rounded-full object-cover border border-slate-300 dark:border-slate-700" />
+                ) : user.provider === 'google' ? (
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" />
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.35 7.34 24 12 24z" />
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.15z" />
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.25 2.65 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+                  </svg>
+                ) : (
+                  <UserCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                )}
+                <span className="hidden sm:inline font-medium">{user.name}</span>
               </div>
               <button
                 onClick={handleSignOut}
@@ -153,9 +173,29 @@ export const Header: React.FC<HeaderProps> = ({ documentCount = 0, documents = [
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
+          ) : (
+            <button
+              onClick={() => setIsAuthOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold shadow-xs hover:shadow-sm transition-all"
+            >
+              <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" />
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.35 7.34 24 12 24z" />
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.15z" />
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.25 2.65 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+              </svg>
+              <span>Sign In</span>
+            </button>
           )}
         </div>
       </div>
+
+      {/* Global Auth Modal for Google Sign-In */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </header>
   );
 };

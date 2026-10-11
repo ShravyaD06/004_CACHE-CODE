@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Eye, Download, Search, CheckCircle, AlertTriangle, XCircle, Clock, Image, FileCode, HelpCircle, Share2, X, Send, Copy, Calendar } from 'lucide-react';
+import { FileText, Eye, Download, Search, CheckCircle, AlertTriangle, XCircle, Clock, Image, FileCode, HelpCircle, Share2, X, Send, Copy, Calendar, Award } from 'lucide-react';
 import type { DocumentItem } from '../types';
 import { api } from '../services/api';
 import { useToast } from './ToastNotification';
+import { AuditCertificateModal } from './AuditCertificateModal';
 
 interface DocumentListProps {
   documents: DocumentItem[];
@@ -19,6 +20,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
 
   // Screen 8: Export Center Modal State
   const [exportDoc, setExportDoc] = useState<DocumentItem | null>(null);
+  const [selectedCertDoc, setSelectedCertDoc] = useState<DocumentItem | null>(null);
   const [exportFormat, setExportFormat] = useState<'json' | 'csv' | 'webhook'>('json');
   const [previewContent, setPreviewContent] = useState<string>('');
   const [loadingPreview, setLoadingPreview] = useState<boolean>(false);
@@ -460,6 +462,14 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
                       >
                         <Download className="w-3.5 h-3.5" />
                       </button>
+
+                      <button
+                        onClick={() => setSelectedCertDoc(doc)}
+                        className="p-1.5 rounded-lg bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 text-teal-600 dark:text-teal-400 hover:bg-teal-600 hover:text-white transition-all"
+                        title="Generate Official Audit Certificate (Printable)"
+                      >
+                        <Award className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -468,6 +478,13 @@ export const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Official Cryptographic Audit Verification Certificate Modal */}
+      <AuditCertificateModal
+        isOpen={!!selectedCertDoc}
+        onClose={() => setSelectedCertDoc(null)}
+        document={selectedCertDoc}
+      />
     </div>
   );
 };

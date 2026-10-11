@@ -10,6 +10,7 @@ import { ToastProvider } from './components/ToastNotification';
 import { ThemeProvider } from './context/ThemeContext';
 import { IntroAnimation } from './components/IntroAnimation';
 import { MouseRecognizer } from './components/MouseRecognizer';
+import { GoogleCallback } from './components/GoogleCallback';
 import { api } from './services/api';
 import type { DocumentItem } from './types';
 
@@ -107,6 +108,10 @@ export const AppContent: React.FC = () => {
               <SchemaViewer />
             </AppLayout>
           }
+        />
+        <Route
+          path="/auth/google/callback"
+          element={<GoogleCallback />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
