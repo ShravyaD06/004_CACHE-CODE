@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ShieldCheck, CheckCircle, AlertTriangle, Edit3, Save, Download, ArrowLeft, AlertCircle, RefreshCw, X, Tag, CornerDownRight, Bot } from 'lucide-react';
 import type { DocumentResults } from '../types';
 import { api } from '../services/api';
+import { BACKEND_URL } from '../config';
 import { useToast } from './ToastNotification';
 import { CopilotDrawer } from './CopilotDrawer';
 
@@ -169,7 +170,7 @@ export const SideBySideReviewCanvas: React.FC = () => {
 
   const selectedField = data.extracted_fields.find((f) => f.id === selectedFieldId);
   const pageNum = selectedField?.page_number || 1;
-  const documentUrl = `http://localhost:8000/uploads/${documentId}_${data.filename}#page=${pageNum}`;
+  const documentUrl = `${BACKEND_URL}/uploads/${documentId}_${data.filename}#page=${pageNum}`;
 
   const getConfidencePill = (level: string, score: number) => {
     const pct = Math.round(score * 100);

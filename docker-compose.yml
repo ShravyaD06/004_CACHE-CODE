@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  docusense-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docusense-ai-app
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL_ID=${GEMINI_MODEL_ID:-gemini-2.5-flash}
+    volumes:
+      - docusense_data:/app/backend/uploads
+      - docusense_db:/app/backend
+    restart: unless-stopped
+
+volumes:
+  docusense_data:
+  docusense_db:
